@@ -339,8 +339,21 @@ button:hover {
 
 .cart td a {
   color: #FB774B;
+}
+
+.cart .remove-btn {
+  color: #FB774B;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14px;
+  border: none;
+  width: 100%;
+}
+
+.cart .edit-btn {
+  color: #FB774B;
+  text-decoration: none;
+  font-size: 14px;
+  border: none;
 }
 
 .cart .product-info p {

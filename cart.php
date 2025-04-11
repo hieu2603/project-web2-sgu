@@ -1,3 +1,96 @@
+<?php
+
+session_start();
+
+if (isset($_POST['add_to_cart'])) {
+  // if user has already added a cart product to cart
+  if (isset($_SESSION['cart'])) {
+    $products_array_id = array_column($_SESSION['cart'], 'product_id'); // Get all product id
+    // if product has already been added to cart or not
+    if (!in_array($_POST['product_id'], $products_array_id)) {
+      $product_id = $_POST['product_id'];
+
+      $product_array = array(
+        'product_id' => $_POST['product_id'],
+        'product_name' => $_POST['product_name'],
+        'product_price' => $_POST['product_price'],
+        'product_image' => $_POST['product_image'],
+        'product_quantity' => $_POST['product_quantity'],
+      );
+
+      $_SESSION['cart'][$product_id] = $product_array;
+
+      // product has already been added
+    } else {
+      echo '<script>alert("Product was already added to cart")</script>';
+    }
+
+    // if this is the first product
+  } else {
+    $product_id = $_POST['product_id'];
+    $product_name = $_POST['product_name'];
+    $product_price = $_POST['product_price'];
+    $product_image = $_POST['product_image'];
+    $product_quantity = $_POST['product_quantity'];
+
+    $product_array = array(
+      'product_id' => $product_id,
+      'product_name' => $product_name,
+      'product_price' => $product_price,
+      'product_image' => $product_image,
+      'product_quantity' => $product_quantity,
+    );
+
+    $_SESSION['cart'][$product_id] = $product_array;
+  }
+
+  // Calculate total price
+  calculateTotalCart();
+
+  // Remove product from the cart
+} elseif (isset($_POST['remove_product'])) {
+  $product_id = $_POST['product_id'];
+  unset($_SESSION['cart'][$product_id]);
+
+  // Calculate total price
+  calculateTotalCart();
+} elseif (isset($_POST['edit_quantity'])) {
+  // Get product id and new quantity
+  $product_id = $_POST['product_id'];
+  $product_quantity = $_POST['product_quantity'];
+
+  // Get product need to update the quantity
+  $product_array = $_SESSION['cart'][$product_id];
+
+  // Update new quantity
+  $product_array['product_quantity'] = $product_quantity;
+
+  // Update product in session
+  $_SESSION['cart'][$product_id] = $product_array;
+
+  // Calculate total price
+  calculateTotalCart();
+} else {
+  header("location: index.php");
+}
+
+function calculateTotalCart()
+{
+  $total = 0;
+  foreach ($_SESSION['cart'] as $key => $value) {
+    $product = $_SESSION['cart'][$key];
+
+    $quantity = $product['product_quantity'];
+    $price = $product['product_price'];
+
+    $total += $quantity * $price;
+  }
+
+  $_SESSION['total'] = $total;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,86 +155,49 @@
         <th>Quantity</th>
         <th>Subtotal</th>
       </tr>
-      <tr>
-        <td>
-          <div class="product-info">
-            <img src="assets/img/featured_1.jpg" alt="featured_1_img">
-            <div>
-              <p>White Shoes</p>
-              <small><span>$</span>69</small>
-              <br>
-              <a class="remove-btn" href="#">Remove</a>
+
+      <?php foreach ($_SESSION['cart'] as $key => $value) { ?>
+        <tr>
+          <td>
+            <div class="product-info">
+              <img src="assets/img/<?php echo $value['product_image'] ?>" alt="featured_1_img">
+              <div>
+                <p><?php echo $value['product_name'] ?></p>
+                <small><span>$</span><?php echo $value['product_price'] ?></small>
+                <br>
+                <form action="cart.php" method="post">
+                  <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>">
+                  <input type="submit" name="remove_product" class="remove-btn" value="Remove">
+                </form>
+              </div>
             </div>
-          </div>
-        </td>
+          </td>
 
-        <td>
-          <input type="number" value="1" min="1" max="9">
-          <a class="edit-btn" href="#">Edit</a>
-        </td>
+          <td>
+            <form action="cart.php" method="post">
+              <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>">
+              <input type="number" name="product_quantity" value="<?php echo $value['product_quantity'] ?>" min="1" max="9">
+              <input type="submit" name="edit_quantity" class="edit-btn" value="Edit">
+            </form>
+          </td>
 
-        <td>
-          <span>$</span>
-          <span class="product-price">69</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="product-info">
-            <img src="assets/img/featured_1.jpg" alt="featured_1_img">
-            <div>
-              <p>White Shoes</p>
-              <small><span>$</span>69</small>
-              <br>
-              <a class="remove-btn" href="#">Remove</a>
-            </div>
-          </div>
-        </td>
-
-        <td>
-          <input type="number" value="1" min="1" max="9">
-          <a class="edit-btn" href="#">Edit</a>
-        </td>
-
-        <td>
-          <span>$</span>
-          <span class="product-price">69</span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="product-info">
-            <img src="assets/img/featured_1.jpg" alt="featured_1_img">
-            <div>
-              <p>White Shoes</p>
-              <small><span>$</span>69</small>
-              <br>
-              <a class="remove-btn" href="#">Remove</a>
-            </div>
-          </div>
-        </td>
-
-        <td>
-          <input type="number" value="1" min="1" max="9">
-          <a class="edit-btn" href="#">Edit</a>
-        </td>
-
-        <td>
-          <span>$</span>
-          <span class="product-price">69</span>
-        </td>
-      </tr>
+          <td>
+            <span class="product-price">$<?php echo $value['product_quantity'] * $value['product_price']; ?></span>
+          </td>
+        </tr>
+      <?php } ?>
     </table>
+    </div>
 
     <div class="cart-total">
       <table>
-        <tr>
+        <!-- <tr>
           <td>Subtotal</td>
           <td>$69</td>
-        </tr>
+        </tr> -->
         <tr>
           <td>Total</td>
-          <td>$69</td>
+          <td>$<?php echo $_SESSION['total']; ?></td>
         </tr>
       </table>
     </div>
