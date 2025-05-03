@@ -158,10 +158,6 @@ function calculateTotalCart()
 
     <div class="cart-total">
       <table>
-        <!-- <tr>
-          <td>Subtotal</td>
-          <td>$69</td>
-        </tr> -->
         <tr>
           <td>Total</td>
           <td>$<?php echo $_SESSION['total']; ?></td>
