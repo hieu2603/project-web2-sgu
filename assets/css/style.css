@@ -226,6 +226,14 @@ button:hover {
   transform: translateY(50px);
   opacity: 0;
   transition: 0.5s all;
+  color: #FFF;
+}
+
+.shop-buy-btn {
+  background-color: #FB774B;
+  opacity: 1;
+  color: #FFF;
+  text-decoration: none;
 }
 
 .product:hover .buy-btn {
@@ -444,6 +452,7 @@ td:last-child {
 .orders .product-info {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .orders th {
@@ -459,13 +468,18 @@ td:last-child {
 }
 
 .orders td {
-  padding: 10px 20px;
+  padding: 5px 10px;
 }
 
 .orders td img {
   width: 80px;
   height: 80px;
   margin-right: 10px;
+}
+
+.orders .order-details-btn {
+  color: #FFF;
+  background-color: #FB774B;
 }
 
 /* Checkout */
@@ -493,4 +507,42 @@ td:last-child {
 /* Contact */
 #contact span {
   color: #FB774B;
+}
+
+#searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#filterContainer {
+  display: flex;
+  align-items: center;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-7 {
+  flex: 7;
+}
+
+#searchForm label {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+#filterContainer input,
+#filterContainer select {
+  width: 120px;
+  margin-right: 20px;
+}
+
+#filterContainer {
+  display: none;
+}
+
+#filterContainer.show {
+  display: flex;
 }

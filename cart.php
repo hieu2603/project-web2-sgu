@@ -70,8 +70,10 @@ if (isset($_POST['add_to_cart'])) {
 
   // Calculate total price
   calculateTotalCart();
-} else {
-  header("location: index.php");
+
+  // Redirect to login page
+} elseif (!$_SESSION['logged_in']) {
+  header("location: login.php");
 }
 
 function calculateTotalCart()
@@ -105,42 +107,7 @@ function calculateTotalCart()
 </head>
 
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
-    <div class="container">
-      <img src="assets/img/logo.jpg" alt="logo_img">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse nav-buttons" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="shop.html">Shop</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="#">Blog</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="contact.html">Contact Us</a>
-          </li>
-
-          <li class="nav-item">
-            <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
-            <a href="account.html"><i class="fa-solid fa-user"></i></a>
-          </li>
-
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <?php include 'layouts/header.php'; ?>
 
   <!-- Cart -->
   <section class="cart container my-5 py-5">
@@ -203,71 +170,13 @@ function calculateTotalCart()
     </div>
 
     <div class="checkout-container">
-      <button class="btn checkout-btn">Checkout</button>
+      <form action="checkout.php" method="post">
+        <input type="submit" name="checkout" class="btn checkout-btn" value="Checkout">
+      </form>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="mt-5 py-5">
-    <div class="row container mx-auto pt-5">
-      <div class="footer-one col-lg-3 col-md-6 col-sm-12">
-        <img src="assets/img/logo.jpg" alt="logo_img">
-        <p class="pt-3">We provide the best products for the most affordable prices</p>
-      </div>
-
-      <div class="footer-one col-lg-3 col-md-6 col-sm-12">
-        <h5 class="pb-2">Featured</h5>
-        <ul class="text-uppercase">
-          <li><a href="#">Men</a></li>
-          <li><a href="#">Women</a></li>
-          <li><a href="#">Boys</a></li>
-          <li><a href="#">Girls</a></li>
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Clothes</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-one col-lg-3 col-md-6 col-sm-12">
-        <h5 class="pb-2">Contact Us</h5>
-        <div>
-          <h6 class="text-uppercase">Address</h6>
-          <p>Saigon University (SGU)</p>
-        </div>
-        <div>
-          <h6 class="text-uppercase">Phone Number</h6>
-          <p>(84-8) 38.354409 - 38.352309</p>
-        </div>
-        <div>
-          <h6 class="text-uppercase">Email</h6>
-          <p>vanphong@sgu.edu.vn</p>
-        </div>
-      </div>
-
-      <div class="footer-one col-lg-3 col-md-6 col-sm-12">
-        <h5 class="pb-2">Facebook</h5>
-        <div class="row">
-          <img src="assets/img/featured_1.jpg" alt="featured_1_img" class="img-fluid w-25 h-100 m-2">
-          <img src="assets/img/featured_2.jpg" alt="featured_2_img" class="img-fluid w-25 h-100 m-2">
-          <img src="assets/img/featured_3.jpg" alt="featured_3_img" class="img-fluid w-25 h-100 m-2">
-          <img src="assets/img/featured_4.jpg" alt="featured_4_img" class="img-fluid w-25 h-100 m-2">
-        </div>
-      </div>
-    </div>
-
-    <div class="copyright mt-5">
-      <div class="row container mx-auto">
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-          <img src="assets/img/payment.jpg" alt="payment_img">
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4 text-nowrap">
-          <p>E-Commerce © 2025 All Right Reserved</p>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-          <a href="#"><i class="fa-brands fa-facebook"></i></a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <?php include 'layouts/footer.php'; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

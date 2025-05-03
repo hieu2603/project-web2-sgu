@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   `product_id` int(11) NOT NULL,
   `product_name` varchar(100) NOT NULL,
   `product_image` varchar(255) NOT NULL,
+  `product_price` decimal(6, 2) NOT NULL,
+  `product_quantity` int(2) NOT NULL,
   `user_id` int(11) NOT NULL,
   `order_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`item_id`)
