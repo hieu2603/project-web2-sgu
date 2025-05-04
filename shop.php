@@ -8,56 +8,95 @@ $minPrice = $_GET['minPrice'] ?? '';
 $maxPrice = $_GET['maxPrice'] ?? '';
 $sortedBy = $_GET['sortedBy'] ?? '';
 
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$records_per_page = 8;
+$offset = ($page - 1) * $records_per_page;
+
+$base_query_string = "search=" . urlencode($search)
+  . "&category=" . urlencode($category)
+  . "&minPrice=" . urlencode($minPrice)
+  . "&maxPrice=" . urlencode($maxPrice)
+  . "&sortedBy=" . urlencode($sortedBy)
+  . "&search_btn=1";
+
 if (isset($_GET['search_btn'])) {
-  $query = "SELECT * FROM products WHERE 1=1";
+  $baseQuery = "FROM products WHERE 1=1";
   $params = [];
   $types = "";
 
-  // Lọc theo từ khóa tên sản phẩm
+  // Search by keyword
   if (!empty($search)) {
-    $query .= " AND product_name LIKE ?";
+    $baseQuery .= " AND product_name LIKE ?";
     $params[] = '%' . $search . '%';
     $types .= 's';
   }
 
-  // Lọc theo loại
+  // Filter by category
   if (!empty($category) && $category !== 'all') {
-    $query .= " AND product_category = ?";
+    $baseQuery .= " AND product_category = ?";
     $params[] = $category;
     $types .= "s";
   }
 
-  // Lọc theo khoảng giá
+  // Filter by price range
   if ($minPrice !== '' && $maxPrice !== '') {
-    $query .= " AND product_price BETWEEN ? AND ?";
+    $baseQuery .= " AND product_price BETWEEN ? AND ?";
     $params[] = (int)$minPrice;
     $params[] = (int)$maxPrice;
     $types .= "ii";
   }
 
-  // Lọc theo điều kiện
+  // Get count of products
+  $countQuery = "SELECT COUNT(*) " . $baseQuery;
+  $stmt_count = $conn->prepare($countQuery);
+  if (!empty($params)) {
+    $stmt_count->bind_param($types, ...$params);
+  }
+  $stmt_count->execute();
+  $stmt_count->bind_result($total_records);
+  $stmt_count->fetch();
+  $stmt_count->close();
+
+  $total_no_of_pages = ceil($total_records / $records_per_page);
+
+  // Get products
+  $query = "SELECT * " . $baseQuery;
+
+  // Filter condition
   if ($sortedBy === 'asc') {
     $query .= " ORDER BY product_price ASC";
   } elseif ($sortedBy === 'desc') {
     $query .= " ORDER BY product_price DESC";
   }
 
+  $query .= " LIMIT ?, ?";
+  $params[] = $offset;
+  $params[] = $records_per_page;
+  $types .= "ii";
+
   $stmt = $conn->prepare($query);
-
-  if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-  }
-
+  $stmt->bind_param($types, ...$params);
   $stmt->execute();
   $products = $stmt->get_result();
 
   // Return all products
 } else {
-  $stmt = $conn->prepare("SELECT * from products");
+  // Get total products
+  $stmt1 = $conn->prepare("SELECT COUNT(*) AS total_records FROM products");
+  $stmt1->execute();
+  $stmt1->bind_result($total_records);
+  $stmt1->store_result();
+  $stmt1->fetch();
 
-  $stmt->execute();
+  $previous_page = $page - 1;
+  $next_page = $page + 1;
 
-  $products = $stmt->get_result();
+  $adjacents = "2";
+  $total_no_of_pages = ceil($total_records / $records_per_page);
+
+  $stmt2 = $conn->prepare("SELECT * FROM products LIMIT $offset, $records_per_page");
+  $stmt2->execute();
+  $products = $stmt2->get_result();
 }
 
 ?>
@@ -153,25 +192,54 @@ if (isset($_GET['search_btn'])) {
       <?php } ?>
 
       <nav aria-label="Page Navigation Example">
-        <ul class="pagination mt-5">
-          <li class="page-item">
-            <a class="page-link" href="#">Previous</a>
+        <ul class="pagination mt-5 mx-auto">
+          <li class="page-item <?php if ($page <= 1) {
+                                  echo "disabled";
+                                } ?>">
+            <a class="page-link" href="<?php if ($page <= 1) {
+                                          echo "#";
+                                        } else {
+                                          echo "?" . $base_query_string . "&page=" . ($page - 1);
+                                        } ?>">Previous</a>
           </li>
-          <li class="page-item">
-            <a class="page-link" href="#">1</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">3</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
+
+          <?php if ($total_no_of_pages >= 3) { ?>
+            <li class="page-item">
+              <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#">...</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?<?php echo $base_query_string; ?>&page=<?php echo $total_no_of_pages; ?>"><?php echo $total_no_of_pages; ?></a>
+            </li>
+          <?php } elseif ($total_no_of_pages == 1) { ?>
+            <li class="page-item">
+              <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+            </li>
+          <?php } else { ?>
+            <li class="page-item">
+              <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
+            </li>
+          <?php } ?>
+
+          <li class="page-item <?php if ($page >= $total_no_of_pages) {
+                                  echo "disabled";
+                                } ?>">
+            <a class="page-link" href="<?php if ($page >= $total_no_of_pages) {
+                                          echo "#";
+                                        } else {
+                                          echo "?" . $base_query_string . "&page=" . ($page + 1);
+                                        } ?>">Next</a>
           </li>
         </ul>
       </nav>
-
     </div>
   </section>
 

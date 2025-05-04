@@ -78,17 +78,18 @@ if (isset($_POST['add_to_cart'])) {
 
 function calculateTotalCart()
 {
-  $total = 0;
+  $total_price = 0;
+
   foreach ($_SESSION['cart'] as $key => $value) {
     $product = $_SESSION['cart'][$key];
 
     $quantity = $product['product_quantity'];
     $price = $product['product_price'];
 
-    $total += $quantity * $price;
+    $total_price += $quantity * $price;
   }
 
-  $_SESSION['total'] = $total;
+  $_SESSION['total'] = $total_price;
 }
 
 ?>
