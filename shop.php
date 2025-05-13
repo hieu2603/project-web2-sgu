@@ -2,6 +2,9 @@
 
 include 'server/connection.php';
 
+// Get categories
+include './admin/utils/get_categories.php';
+
 $search = $_GET['search'] ?? '';
 $category = $_GET['category'] ?? '';
 $minPrice = $_GET['minPrice'] ?? '';
@@ -153,10 +156,11 @@ if (isset($_GET['search_btn'])) {
           <label for="selectCategory" class="form-label">Category</label>
           <select name="category" id="selectCategory" class="form-select">
             <option value="all">All</option>
-            <option value="shoes">Shoes</option>
-            <option value="coats">Coats</option>
-            <option value="watches">Watches</option>
-            <option value="bags">Bags</option>
+            <?php while ($row = $categories->fetch_assoc()) { ?>
+              <option value="<?php echo $row['category_id']; ?>">
+                <?php echo $row['category_name']; ?>
+              </option>
+            <?php } ?>
           </select>
 
           <label for="price" class="form-label">Price</label>
@@ -177,7 +181,7 @@ if (isset($_GET['search_btn'])) {
     <div class="row mx-auto container">
       <?php while ($row = $products->fetch_assoc()) { ?>
         <div onclick="window.location.href='single_product.html'" class="product text-center col-lg-3 col-md-4 col-sm-12">
-          <img src="/assets/img/<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_image']; ?>" class="img-fluid mb-3">
+          <img src="<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_image']; ?>" class="img-fluid mb-3">
           <div class="star">
             <i class="fa-solid fa-star"></i>
             <i class="fa-solid fa-star"></i>

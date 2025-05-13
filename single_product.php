@@ -57,19 +57,19 @@ if (isset($_GET['product_id'])) {
     <div class="row mt-5">
       <?php while ($row = $product->fetch_assoc()) { ?>
         <div class="col-lg-5 col-md-6 col-sm-12">
-          <img src="assets/img/<?php echo $row['product_image']; ?>" alt="product_1_img" class="img-fluid w-100 pb-1" id="mainImg">
+          <img src="<?php echo $row['product_image']; ?>" alt="product_1_img" class="img-fluid w-100 pb-1" id="mainImg">
           <div class="small-img-group">
             <div class="small-img-col">
-              <img src="assets/img/<?php echo $row['product_image']; ?>" alt="featured_2_img" width="100%" class="small-img">
+              <img src="<?php echo $row['product_image']; ?>" alt="featured_2_img" width="100%" class="small-img">
             </div>
             <div class="small-img-col">
-              <img src="assets/img/<?php echo $row['product_image2']; ?>" alt="featured_2_img" width="100%" class="small-img">
+              <img src="<?php echo $row['product_image2']; ?>" alt="featured_2_img" width="100%" class="small-img">
             </div>
             <div class="small-img-col">
-              <img src="assets/img/<?php echo $row['product_image3']; ?>" alt="featured_2_img" width="100%" class="small-img">
+              <img src="<?php echo $row['product_image3']; ?>" alt="featured_2_img" width="100%" class="small-img">
             </div>
             <div class="small-img-col">
-              <img src="assets/img/<?php echo $row['product_image4']; ?>" alt="featured_2_img" width="100%" class="small-img">
+              <img src="<?php echo $row['product_image4']; ?>" alt="featured_2_img" width="100%" class="small-img">
             </div>
           </div>
         </div>

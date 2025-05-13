@@ -1,4 +1,4 @@
 <?php
 
-$conn = new mysqli("localhost", "root", "", "project-web2-sgu")
+$conn = new mysqli("localhost", "root", "", "web2_test")
   or die("Couldn't connect to database!");

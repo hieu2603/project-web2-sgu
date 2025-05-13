@@ -11,12 +11,12 @@ if (isset($_POST['register'])) {
   $confirmPassword = $_POST['confirmPassword'];
 
   if ($password !== $confirmPassword) {
-    header("location: register.php?error=Password doesn't match");
+    header("location: register.php?error=Xác nhận mật khẩu không khớp");
   } elseif (strlen($password) < 8) {
-    header("location: register.php?error=Password must be at least 8 characters");
+    header("location: register.php?error=Mật khẩu phải có ít nhất 8 ký tự");
   } else {
     // Check email existed
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM users WHERE user_email = ?");
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM accounts WHERE account_email = ?");
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $stmt->bind_result($num_rows);
@@ -24,20 +24,21 @@ if (isset($_POST['register'])) {
     $stmt->fetch();
 
     if ($num_rows != 0) {
-      header('location: register.php?error=A user with this email already exists');
+      header('location: register.php?error=Email đã tồn tại');
     } else {
       // Create new user
-      $stmt1 = $conn->prepare("INSERT INTO users (user_name, user_email, user_password) VALUES (?, ?, ?)");
+      $stmt1 = $conn->prepare("INSERT INTO accounts (account_name, account_email, account_password) 
+                               VALUES (?, ?, ?)");
       $stmt1->bind_param('sss', $name, $email, md5($password));
       $stmt1->execute();
 
-      $user_id = $stmt1->insert_id;
-      $_SESSION['user_id'] = $user_id;
+      $account_id = $stmt1->insert_id;
+      $_SESSION['user_id'] = $account_id;
       $_SESSION["user_email"] = $email;
       $_SESSION['user_name'] = $name;
       $_SESSION['logged_in'] = true;
 
-      header("location: account.php?register_success=You registered successfully");
+      header("location: account.php?register_success=Đăng ký tài khoản thành công");
     }
   }
   // If user has already registered, redirect user to account page

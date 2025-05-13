@@ -13,28 +13,41 @@ if (isset($_POST['login_btn'])) {
   $email = $_POST['email'];
   $password = md5($_POST['password']);
 
-  $stmt = $conn->prepare("SELECT * FROM users WHERE user_email = ? AND user_password = ? LIMIT 1");
+  $stmt = $conn->prepare("SELECT account_id, account_name, account_email, account_status, account_role 
+                          FROM accounts 
+                          WHERE account_email = ? 
+                          AND account_password = ?");
 
   $stmt->bind_param('ss', $email, $password);
 
   if ($stmt->execute()) {
-    $stmt->bind_result($user_id, $user_name, $user_email, $user_password);
+    $stmt->bind_result($account_id, $account_name, $account_email, $account_status, $account_role);
     $stmt->store_result();
 
     if ($stmt->num_rows() == 1) {
       $stmt->fetch();
 
-      $_SESSION['user_id'] = $user_id;
-      $_SESSION['user_name'] = $user_name;
-      $_SESSION['user_email'] = $user_email;
+      if ($account_status == 'Inactive') {
+        header('location: login.php?error=Tài khoản của bạn đã bị khóa');
+        exit;
+      }
+
+      if ($account_role != 'User') {
+        header('location: login.php?error=Tài khoản của bạn không có quyền truy cập vào trang này');
+        exit;
+      }
+
+      $_SESSION['user_id'] = $account_id;
+      $_SESSION['user_name'] = $account_name;
+      $_SESSION['user_email'] = $account_email;
       $_SESSION['logged_in'] = true;
 
-      header('location: account.php?login_success=Logged in successfully');
+      header('location: account.php?login_success=Đăng nhập thành công');
     } else {
-      header('location: login.php?error=Wrong credentials');
+      header('location: login.php?error=Mật khẩu hoặc tài khoản không chính xác');
     }
   } else {
-    header('location: login.php?Something went wrong. Please try again');
+    header('location: login.php?error=Có lỗi xảy ra. Vui lòng thử lại sau');
   }
 }
 

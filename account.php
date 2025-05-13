@@ -24,31 +24,31 @@ if (isset($_GET['logout'])) {
 if (isset($_POST['change_password_btn'])) {
   $password = $_POST['password'];
   $confirmPassword = $_POST['confirmPassword'];
-  $user_email = $_SESSION['user_email'];
+  $account_email = $_SESSION['user_email'];
 
   if ($password !== $confirmPassword) {
-    header("location: account.php?error=Password doesn't match");
+    header("location: account.php?error=Xác nhận mật khẩu không khớp");
   } elseif (strlen($password) < 8) {
-    header("location: account.php?error=Password must be at least 8 characters");
+    header("location: account.php?error=Mật khẩu phải có ít nhất 8 ký tự");
   } else {
-    $stmt = $conn->prepare("UPDATE users SET user_password = ? WHERE user_email = ?");
-    $stmt->bind_param('ss', md5($password), $user_email);
+    $stmt = $conn->prepare("UPDATE accounts SET account_password = ? WHERE account_email = ?");
+    $stmt->bind_param('ss', md5($password), $account_email);
 
     if ($stmt->execute()) {
-      header('location: account.php?message=Password has been updated successfully');
+      header('location: account.php?message=Mật khẩu đã được cập nhật');
     } else {
-      header('location: account.php?error=Could not update password');
+      header('location: account.php?error=Không thể cập nhật mật khẩu');
     }
   }
 }
 
 // Get orders
 if (isset($_SESSION['logged_in'])) {
-  $user_id = $_SESSION['user_id'];
+  $account_id = $_SESSION['user_id'];
 
-  $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ?");
+  $stmt = $conn->prepare("SELECT * FROM orders WHERE account_id = ?");
 
-  $stmt->bind_param('i', $user_id);
+  $stmt->bind_param('i', $account_id);
 
   $stmt->execute();
 
@@ -123,10 +123,11 @@ if (isset($_SESSION['logged_in'])) {
     <table class="mt-5 pt-5">
       <tr>
         <th>ID</th>
-        <th>Cost</th>
-        <th>Status</th>
-        <th>Date</th>
-        <th>Details</th>
+        <th>Tổng tiền</th>
+        <th>Trạng thái</th>
+        <th>Hình thức thanh toán</th>
+        <th>Ngày đặt hàng</th>
+        <th>Chi tiết đơn hàng</th>
       </tr>
       <?php while ($row = $orders->fetch_assoc()) { ?>
         <tr>
@@ -143,14 +144,19 @@ if (isset($_SESSION['logged_in'])) {
           </td>
 
           <td>
+            <span><?php echo $row['payment_method']; ?></span>
+          </td>
+
+          <td>
             <span><?php echo $row['order_date']; ?></span>
           </td>
 
           <td>
             <form method="post" action="order_details.php">
+              <input type="hidden" value="<?php echo $row['payment_method']; ?>" name="payment_method">
               <input type="hidden" value="<?php echo $row['order_status']; ?>" name="order_status">
               <input type="hidden" value="<?php echo $row['order_id']; ?>" name="order_id">
-              <input class="btn order-details-btn" name="order_details_btn" type="submit" value="Details">
+              <input class="btn order-details-btn" name="order_details_btn" type="submit" value="Chi tiết">
             </form>
           </td>
         </tr>

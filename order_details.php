@@ -8,7 +8,12 @@ if (isset($_POST['order_details_btn']) && isset($_POST['order_id'])) {
   $order_id = $_POST['order_id'];
   $order_status = $_POST['order_status'];
 
-  $stmt = $conn->prepare("SELECT * FROM order_items WHERE order_id = ?");
+  $stmt = $conn->prepare("SELECT products.product_name, products.product_image, 
+                          products.product_price, order_items.product_quantity 
+                          FROM products 
+                          INNER JOIN order_items
+                          ON products.product_id=order_items.product_id
+                          WHERE order_id = ?");
 
   $stmt->bind_param('i', $order_id);
 
@@ -71,7 +76,7 @@ function calculateTotalOrderPrice($order_details)
         <tr>
           <td>
             <div class="product-info">
-              <img src="/assets/img/<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_image']; ?>">
+              <img src="<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_image']; ?>">
               <div>
                 <p class="mt-3"><?php echo $row['product_name']; ?></p>
               </div>
@@ -89,12 +94,19 @@ function calculateTotalOrderPrice($order_details)
       <?php } ?>
     </table>
 
-    <?php if ($order_status == "Not Paid") { ?>
-      <form style="float: right;" method="post" action="payment.php">
-        <input type="hidden" name="order_total_price" value="<?php echo $order_total_price; ?>">
-        <input type="hidden" name="order_status" value="<?php echo $order_status; ?>">
-        <input type="submit" name="order_pay_btn" class="btn btn-primary" value="Pay Now">
-      </form>
+    <?php if ($order_status != "Hoàn thành") { ?>
+      <div class="text-end mt-4">
+        <form method="post" action="payment.php" style="display: inline-block;">
+          <input type="hidden" name="order_total_price" value="<?php echo $order_total_price; ?>">
+          <input type="hidden" name="order_status" value="<?php echo $order_status; ?>">
+          <input type="submit" name="order_pay_btn" class="btn btn-primary me-2" value="Thanh toán">
+        </form>
+
+        <form action="order_details.php" method="post" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+          <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+          <input type="submit" name="cancel_order_btn" class="btn btn-danger" value="Hủy đơn">
+        </form>
+      </div>
     <?php } ?>
   </section>
 
