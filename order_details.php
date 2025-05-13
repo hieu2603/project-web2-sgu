@@ -4,28 +4,64 @@ session_start();
 
 include 'server/connection.php';
 
-if (isset($_POST['order_details_btn']) && isset($_POST['order_id'])) {
+if (!isset($_SESSION['user_id'])) {
+  header('location: login.php');
+  exit;
+}
+
+$account_id = $_SESSION['user_id'];
+
+if (isset($_POST['cancel_order_btn']) && isset($_POST['order_id'])) {
   $order_id = $_POST['order_id'];
-  $order_status = $_POST['order_status'];
 
-  $stmt = $conn->prepare("SELECT products.product_name, products.product_image, 
-                          products.product_price, order_items.product_quantity 
-                          FROM products 
-                          INNER JOIN order_items
-                          ON products.product_id=order_items.product_id
-                          WHERE order_id = ?");
+  $cancel_order_stmt = $conn->prepare("UPDATE orders 
+                                       SET order_status = 'Hủy đơn' 
+                                       WHERE order_id = ?
+                                       AND account_id = ?");
 
-  $stmt->bind_param('i', $order_id);
+  $cancel_order_stmt->bind_param('ii', $order_id, $account_id);
 
-  $stmt->execute();
+  if ($cancel_order_stmt->execute()) {
+    header('location: account.php');
+    exit;
+  }
+}
 
-  $order_details = $stmt->get_result();
-
-  $order_total_price = calculateTotalOrderPrice($order_details);
-} else {
+if (!isset($_GET['order_id'])) {
   header('location: account.php');
   exit;
 }
+
+$order_id = $_GET['order_id'];
+
+$order_stmt = $conn->prepare("SELECT order_status, payment_method 
+                              FROM orders
+                              WHERE order_id = ? 
+                              AND account_id = ?");
+
+$order_stmt->bind_param('ii', $order_id, $account_id);
+$order_stmt->execute();
+$order_result = $order_stmt->get_result();
+
+if ($order_result->num_rows == 0) {
+  header('location: account.php');
+  exit;
+}
+
+$order_data = $order_result->fetch_assoc();
+$order_status = $order_data['order_status'];
+$payment_method = $order_data['payment_method'];
+
+$stmt = $conn->prepare("SELECT products.product_name, products.product_image, 
+                        products.product_price, order_items.product_quantity 
+                        FROM products 
+                        INNER JOIN order_items
+                        ON products.product_id=order_items.product_id
+                        WHERE order_items.order_id = ?");
+
+$stmt->bind_param('i', $order_id);
+$stmt->execute();
+$order_details = $stmt->get_result();
 
 function calculateTotalOrderPrice($order_details)
 {
@@ -94,15 +130,17 @@ function calculateTotalOrderPrice($order_details)
       <?php } ?>
     </table>
 
-    <?php if ($order_status != "Hoàn thành") { ?>
+    <?php if (($order_status != "Hoàn thành") && ($order_status != "Hủy đơn")) { ?>
       <div class="text-end mt-4">
-        <form method="post" action="payment.php" style="display: inline-block;">
-          <input type="hidden" name="order_total_price" value="<?php echo $order_total_price; ?>">
-          <input type="hidden" name="order_status" value="<?php echo $order_status; ?>">
-          <input type="submit" name="order_pay_btn" class="btn btn-primary me-2" value="Thanh toán">
-        </form>
+        <?php if ($payment_method == 'Trực tuyến') { ?>
+          <form method="post" action="payment.php" style="display: inline-block;">
+            <input type="hidden" name="order_total_price" value="<?php echo $order_total_price; ?>">
+            <input type="hidden" name="order_status" value="<?php echo $order_status; ?>">
+            <input type="submit" name="order_pay_btn" class="btn btn-primary me-2" value="Thanh toán">
+          </form>
+        <?php } ?>
 
-        <form action="order_details.php" method="post" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+        <form action="order_details.php" method="post" style="display: inline-block;">
           <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
           <input type="submit" name="cancel_order_btn" class="btn btn-danger" value="Hủy đơn">
         </form>

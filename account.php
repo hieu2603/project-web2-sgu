@@ -152,11 +152,9 @@ if (isset($_SESSION['logged_in'])) {
           </td>
 
           <td>
-            <form method="post" action="order_details.php">
-              <input type="hidden" value="<?php echo $row['payment_method']; ?>" name="payment_method">
-              <input type="hidden" value="<?php echo $row['order_status']; ?>" name="order_status">
+            <form method="get" action="order_details.php">
               <input type="hidden" value="<?php echo $row['order_id']; ?>" name="order_id">
-              <input class="btn order-details-btn" name="order_details_btn" type="submit" value="Chi tiết">
+              <input class="btn order-details-btn" type="submit" value="Chi tiết">
             </form>
           </td>
         </tr>
