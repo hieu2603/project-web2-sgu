@@ -2,10 +2,26 @@
 
 session_start();
 
-if (isset($_POST['order_pay_btn'])) {
-  $order_status = $_POST['order_status'];
-  $order_total_price = $_POST['order_total_price'];
+include 'server/connection.php';
+
+if (!isset($_SESSION['user_id'])) {
+  header('location: login.php');
+  exit;
 }
+
+if (!isset($_POST['order_pay_btn']) && !isset($_POST['order_id'])) {
+  header('location: index.php');
+  exit;
+}
+
+$order_id = $_POST['order_id'];
+
+$order_stmt = $conn->prepare("SELECT * FROM orders WHERE order_id = ?");
+$order_stmt->bind_param('i', $order_id);
+$order_stmt->execute();
+
+$order = $order_stmt->get_result();
+$order_row = $order->fetch_assoc();
 
 ?>
 
@@ -28,19 +44,18 @@ if (isset($_POST['order_pay_btn'])) {
   <!-- Payment -->
   <section class="my-5 py-5">
     <div class="container text-center mt-3 pt-5">
-      <h2 class="form-weight-bold">Payment</h2>
+      <h2 class="form-weight-bold">Trang Thanh Toán</h2>
       <hr class="mx-auto">
     </div>
     <div class="mx-auto container text-center">
-      <?php if (isset($_POST['order_status']) && $_POST['order_status'] === "Not Paid") { ?>
-        <p>Total payment: $<?php echo $order_total_price; ?></p>
-        <input class="btn btn-primary" type="submit" value="Pay Now">
-      <?php } elseif (isset($_SESSION['total']) && $_SESSION['total'] != 0) { ?>
-        <p>Total payment: $<?php echo $_SESSION['total']; ?></p>
-        <input class="btn btn-primary" type="submit" value="Pay Now">
-      <?php } else { ?>
-        <p>You don't have an order!</p>
-      <?php } ?>
+      <p><strong>Mã đơn hàng:</strong> #<?php echo $order_row['order_id']; ?></p>
+      <p><strong>Tổng tiền:</strong> <?php echo $order_row['order_cost']; ?>đ</p>
+      <p><strong>Ngày đặt hàng:</strong> <?php echo $order_row['order_date']; ?></p>
+
+      <form action="order_success.php" method="post">
+        <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+        <input type="submit" name="pay_btn" class="btn btn-primary" value="Thanh toán">
+      </form>
     </div>
   </section>
 

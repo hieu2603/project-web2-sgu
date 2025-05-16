@@ -9,9 +9,74 @@ if (!isset($_SESSION['admin_logged_in'])) {
   exit;
 }
 
-$stmt = $conn->prepare("SELECT * FROM categories ORDER BY category_id ASC");
-$stmt->execute();
-$categories = $stmt->get_result();
+$search = $_GET['search'] ?? '';
+
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$records_per_page = 8;
+$offset = ($page - 1) * $records_per_page;
+
+$base_query_string = "search=" . urlencode($search)
+  . "&search_btn=1";
+
+if (isset($_GET['search_btn'])) {
+  $baseQuery = "FROM categories WHERE 1=1";
+  $params = [];
+  $types = "";
+
+  // Search by keyword (id, name)
+  if (!empty($search)) {
+    $baseQuery .= " AND (category_id LIKE ? OR category_name LIKE ?)";
+    $searchParam = '%' . trim($search) . '%';
+    $params[] = $searchParam;
+    $params[] = $searchParam;
+    $types .= 'ss';
+  }
+
+  // Get count of accounts
+  $countQuery = "SELECT COUNT(*) " . $baseQuery;
+  $stmt_count = $conn->prepare($countQuery);
+  if (!empty($params)) {
+    $stmt_count->bind_param($types, ...$params);
+  }
+  $stmt_count->execute();
+  $stmt_count->bind_result($total_records);
+  $stmt_count->fetch();
+  $stmt_count->close();
+
+  $total_no_of_pages = ceil($total_records / $records_per_page);
+
+  // Get orders
+  $query = "SELECT * " . $baseQuery;
+
+  $query .= " ORDER BY category_id DESC";
+  $query .= " LIMIT ?, ?";
+  $params[] = $offset;
+  $params[] = $records_per_page;
+  $types .= "ii";
+
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param($types, ...$params);
+  $stmt->execute();
+  $categories = $stmt->get_result();
+
+  // Return all accounts
+} else {
+  // Get total accounts
+  $stmt1 = $conn->prepare("SELECT COUNT(*) AS total_records FROM categories");
+  $stmt1->execute();
+  $stmt1->bind_result($total_records);
+  $stmt1->store_result();
+  $stmt1->fetch();
+
+  $total_no_of_pages = ceil($total_records / $records_per_page);
+
+  $stmt2 = $conn->prepare("SELECT * 
+                           FROM categories 
+                           ORDER BY category_id DESC
+                           LIMIT $offset, $records_per_page");
+  $stmt2->execute();
+  $categories = $stmt2->get_result();
+}
 
 ?>
 
@@ -36,29 +101,90 @@ $categories = $stmt->get_result();
       <!-- Content (optional) -->
       <div class="col py-3">
         <h2>Quản lý loại phân loại</h2>
-        <a class="btn btn-primary" href="add_category.php">Thêm</a>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Tên Phân Loại</th>
-              <th scope="col">Chỉnh sửa</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($categories as $category) { ?>
-              <tr class="align-middle">
-                <th scope="row"><?php echo $category['category_id']; ?></th>
-                <td><?php echo $category['category_name']; ?></td>
-                <td>
-                  <a class="btn btn-warning" href="edit_category.php?category_id=<?php echo $category['category_id']; ?>">
-                    Edit
-                  </a>
-                </td>
+
+        <form id="searchForm" action="categories.php" method="get">
+          <div class="mb-3" id="searchContainer">
+            <a class="btn btn-primary" href="add_category.php">Thêm</a>
+            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm...">
+            <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
+          </div>
+        </form>
+
+        <?php if ($total_no_of_pages > 0) { ?>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tên Phân Loại</th>
+                <th scope="col">Chỉnh sửa</th>
               </tr>
-            <?php } ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php foreach ($categories as $category) { ?>
+                <tr class="align-middle">
+                  <th scope="row"><?php echo $category['category_id']; ?></th>
+                  <td><?php echo $category['category_name']; ?></td>
+                  <td>
+                    <a class="btn btn-warning" href="edit_category.php?category_id=<?php echo $category['category_id']; ?>">
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+          <nav aria-label="Page Navigation Example">
+            <ul class="pagination mt-5 justify-content-center">
+              <li class="page-item <?php if ($page <= 1) {
+                                      echo "disabled";
+                                    } ?>">
+                <a class="page-link" href="<?php if ($page <= 1) {
+                                              echo "#";
+                                            } else {
+                                              echo "?" . $base_query_string . "&page=" . ($page - 1);
+                                            } ?>">Previous</a>
+              </li>
+
+              <?php if ($total_no_of_pages >= 3) { ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">...</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=<?php echo $total_no_of_pages; ?>"><?php echo $total_no_of_pages; ?></a>
+                </li>
+              <?php } elseif ($total_no_of_pages == 1) { ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+                </li>
+              <?php } else { ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
+                </li>
+              <?php } ?>
+
+              <li class="page-item <?php if ($page >= $total_no_of_pages) {
+                                      echo "disabled";
+                                    } ?>">
+                <a class="page-link" href="<?php if ($page >= $total_no_of_pages) {
+                                              echo "#";
+                                            } else {
+                                              echo "?" . $base_query_string . "&page=" . ($page + 1);
+                                            } ?>">Next</a>
+              </li>
+            </ul>
+          </nav>
+        <?php } else { ?>
+          <p>Không tìm thấy kết quả</p>
+        <?php } ?>
       </div>
     </div>
   </div>

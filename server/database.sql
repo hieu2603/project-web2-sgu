@@ -33,7 +33,7 @@ CREATE TABLE products (
 CREATE TABLE orders (
   order_id INT AUTO_INCREMENT PRIMARY KEY,
   order_cost DECIMAL(12, 2) NOT NULL,
-  order_status VARCHAR(255) NOT NULL DEFAULT 'Chưa xác nhận',
+  order_status VARCHAR(255) NOT NULL DEFAULT 'Chưa xác nhận', -- Chưa xác nhận | Chờ thanh toán | Đã xác nhận | Thành công | Hủy đơn
   account_id INT,
   phone_number VARCHAR(12) NOT NULL,
   city VARCHAR(255) NOT NULL,

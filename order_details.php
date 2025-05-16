@@ -130,12 +130,11 @@ function calculateTotalOrderPrice($order_details)
       <?php } ?>
     </table>
 
-    <?php if (($order_status != "Hoàn thành") && ($order_status != "Hủy đơn")) { ?>
+    <?php if (($order_status != "Thành công") && ($order_status != "Hủy đơn")) { ?>
       <div class="text-end mt-4">
-        <?php if ($payment_method == 'Trực tuyến') { ?>
+        <?php if ($payment_method == 'Trực tuyến' && $order_status == 'Chờ thanh toán') { ?>
           <form method="post" action="payment.php" style="display: inline-block;">
-            <input type="hidden" name="order_total_price" value="<?php echo $order_total_price; ?>">
-            <input type="hidden" name="order_status" value="<?php echo $order_status; ?>">
+            <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
             <input type="submit" name="order_pay_btn" class="btn btn-primary me-2" value="Thanh toán">
           </form>
         <?php } ?>

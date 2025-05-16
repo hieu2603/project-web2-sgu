@@ -5,7 +5,7 @@ include 'connection.php';
 
 // If user is not logged in
 if (!isset($_SESSION['logged_in'])) {
-  header('location: ../checkout.php?message=Please login to place order');
+  header('location: ../checkout.php?message=Vui lòng đăng nhập để đặt hàng');
   exit;
 
   // If user is logged in
@@ -61,9 +61,6 @@ if (!isset($_SESSION['logged_in'])) {
       $product = $_SESSION['cart'][$key];
 
       $product_id = $product['product_id'];
-      // $product_name = $product['product_name'];
-      // $product_image = $product['product_image'];
-      // $product_price = $product['product_price'];
       $product_quantity = $product['product_quantity'];
 
       $stmt1 = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_quantity)
@@ -77,6 +74,7 @@ if (!isset($_SESSION['logged_in'])) {
     // 3. Remove products from cart -> delay until payment is done
     // unset($_SESSION['cart']);
 
-    header('location: ../payment.php?order_status="Order placed successfully"');
+    header('location: ../order_success.php?order_id=' . $order_id);
+    exit;
   }
 }

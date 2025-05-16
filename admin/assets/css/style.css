@@ -18,3 +18,23 @@
 .nav-pills li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
+
+#searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#filterContainer {
+  display: none;
+}
+
+#filterContainer.show {
+  display: block;
+}
+
+.form-label-inline {
+  min-width: 120px;
+  /* chỉnh theo độ dài label bạn muốn */
+  margin-right: 10px;
+}

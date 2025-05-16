@@ -11,9 +11,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
   exit;
 }
 
-?>
+include '../admin/utils/get_categories.php';
 
-<?php
 $search = $_GET['search'] ?? '';
 $category = $_GET['category'] ?? '';
 $minPrice = $_GET['minPrice'] ?? '';
@@ -38,24 +37,36 @@ if (isset($_GET['search_btn'])) {
 
   // Search by keyword
   if (!empty($search)) {
-    $baseQuery .= " AND product_name LIKE ?";
+    $baseQuery .= " AND (product_id LIKE ? OR product_name LIKE ? OR product_color LIKE ?)";
     $params[] = '%' . $search . '%';
-    $types .= 's';
+    $params[] = '%' . $search . '%';
+    $params[] = '%' . $search . '%';
+    $types .= 'sss';
   }
 
   // Filter by category
-  if (!empty($category) && $category !== 'all') {
-    $baseQuery .= " AND product_category = ?";
+  if (!empty($category) && $category !== 'Tất cả') {
+    $baseQuery .= " AND products.category_id = ?";
     $params[] = $category;
     $types .= "s";
   }
 
-  // Filter by price range
-  if ($minPrice !== '' && $maxPrice !== '') {
-    $baseQuery .= " AND product_price BETWEEN ? AND ?";
+  if (!empty($minPrice)) {
+    $baseQuery .= " AND product_price >= ?";
     $params[] = (int)$minPrice;
+    $types .= 'i';
+  }
+
+  if (!empty($maxPrice)) {
+    $baseQuery .= " AND product_price <= ?";
     $params[] = (int)$maxPrice;
-    $types .= "ii";
+    $types .= 'i';
+  }
+
+  if ($sortedBy === 'Đang bán' || $sortedBy === 'Ngừng bán') {
+    $baseQuery .= " AND product_status = ?";
+    $params[] = $sortedBy;
+    $types .= 's';
   }
 
   // Get count of products
@@ -77,9 +88,11 @@ if (isset($_GET['search_btn'])) {
     substr($baseQuery, strlen("FROM products"));
 
   // Filter condition
-  if ($sortedBy === 'asc') {
+  if ($sortedBy === 'Hàng mới') {
+    $query .= " ORDER BY product_id DESC";
+  } elseif ($sortedBy === 'Giá thấp đến cao') {
     $query .= " ORDER BY product_price ASC";
-  } elseif ($sortedBy === 'desc') {
+  } elseif ($sortedBy === 'Giá cao đến thấp') {
     $query .= " ORDER BY product_price DESC";
   }
 
@@ -112,6 +125,7 @@ if (isset($_GET['search_btn'])) {
                            FROM products 
                            INNER JOIN categories 
                            ON products.category_id=categories.category_id
+                           ORDER BY products.product_id DESC
                            LIMIT $offset, $records_per_page");
   $stmt2->execute();
   $products = $stmt2->get_result();
@@ -140,7 +154,50 @@ if (isset($_GET['search_btn'])) {
       <!-- Content (optional) -->
       <div class="col py-3">
         <h2>Quản lý sản phẩm</h2>
-        <a class="btn btn-primary" href="add_product.php">Thêm</a>
+
+        <form id="searchForm" action="products.php" method="get">
+          <div class="mb-3" id="searchContainer">
+            <a class="btn btn-primary" href="add_product.php">Thêm</a>
+            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm... (ID, tên sản phẩm, màu sắc)">
+            <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
+            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-secondary">
+          </div>
+
+          <div id="filterContainer">
+            <div class="row mb-3">
+              <div class="col-md-3 d-flex align-items-center">
+                <label for="selectCategory" class="form-label-inline" style="min-width: 70px;">Phân loại</label>
+                <select name="category" id="selectCategory" class="form-select">
+                  <option value="Tất cả">Tất cả</option>
+                  <?php while ($category_row = $categories->fetch_assoc()) { ?>
+                    <option value="<?php echo $category_row['category_id']; ?>">
+                      <?php echo $category_row['category_name']; ?>
+                    </option>
+                  <?php } ?>
+                </select>
+              </div>
+              <div class="col-md-2 d-flex align-items-center">
+                <label for="minPrice" class="form-label-inline" style="min-width: 30px;">Giá</label>
+                <input style="width: 150px;" name="minPrice" id="minPrice" class="form-control" type="number" placeholder="Từ">
+              </div>
+              <div class="col-md-2 d-flex align-items-center">
+                <label for="maxPrice" class="form-label-inline" style="min-width: 30px;">Giá</label>
+                <input style="width: 150px;" name="maxPrice" id="maxPrice" class="form-control" type="number" placeholder="Đến">
+              </div>
+              <div class="col-md-3 d-flex align-items-center">
+                <label for="sortedBy" class="form-label-inline" style="min-width: 70px;">Lọc theo</label>
+                <select name="sortedBy" id="sortedBy" class="form-select">
+                  <option value="Hàng mới">Hàng mới</option>
+                  <option value="Bán chạy">Bán chạy</option>
+                  <option value="Giá thấp đến cao">Giá thấp đến cao</option>
+                  <option value="Giá cao đến thấp">Giá cao đến thấp</option>
+                  <option value="Đang bán">Đang bán</option>
+                  <option value="Ngừng bán">Ngừng bán</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
         <table class="table">
           <thead>
             <tr>
@@ -166,7 +223,7 @@ if (isset($_GET['search_btn'])) {
                 <td><?php echo $product['product_status']; ?></td>
                 <td>
                   <a class="btn btn-warning" href="edit_product.php?product_id=<?php echo $product['product_id']; ?>">
-                    Edit
+                    Sửa
                   </a>
                 </td>
               </tr>
@@ -230,6 +287,12 @@ if (isset($_GET['search_btn'])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
+
+  <script>
+    document.getElementById('filterToggleBtn').addEventListener('click', function() {
+      document.getElementById('filterContainer').classList.toggle('show');
+    });
+  </script>
 </body>
 
 </html>
