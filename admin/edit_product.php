@@ -17,7 +17,7 @@ if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {
 // Get categories
 include '../admin/utils/get_categories.php';
 
-$product_id = $_GET['product_id'];
+$product_id = (int)$_GET['product_id'];
 
 $product_stmt = $conn->prepare("SELECT products.*, categories.* 
                                   FROM products 
@@ -101,6 +101,43 @@ if (isset($_POST['edit_product_btn'])) {
   }
 }
 
+if (isset($_POST['delete_product_btn'])) {
+  $count_stmt = $conn->prepare("SELECT COUNT(*) AS total 
+                                FROM order_items
+                                WHERE product_id = ?");
+
+  $count_stmt->bind_param('i', $product_id);
+  $count_stmt->execute();
+
+  $result = $count_stmt->get_result();
+  $check = $result->fetch_assoc();
+
+  if ($check['total'] > 0) {
+    $update_product_stmt = $conn->prepare("UPDATE products
+                                           SET product_status = 'Ngừng bán'
+                                           WHERE product_id = ?");
+
+    $update_product_stmt->bind_param('i', $product_id);
+    if ($update_product_stmt->execute()) {
+      header('location: edit_product.php?product_id=' . $product_id . '&error=Sản phẩm đã bán ra không thể xóa. Hệ thống sẽ ẩn sản phẩm');
+      exit;
+    } else {
+      header('location: edit_product.php?product_id=' . $product_id . '&error=Lỗi khi ẩn sản phẩm');
+      exit;
+    }
+  } else {
+    $delete_product_stmt = $conn->prepare("DELETE FROM products WHERE product_id = ?");
+    $delete_product_stmt->bind_param('i', $product_id);
+    if ($delete_product_stmt->execute()) {
+      header('location: products.php?success=Xóa thành công');
+      exit;
+    } else {
+      header('location: edit_product.php?product_id=' . $product_id . '&error=Lỗi khi xóa sản phẩm');
+      exit;
+    }
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -167,7 +204,7 @@ if (isset($_POST['edit_product_btn'])) {
                   <label class="form-label" for="thumbnail">Ảnh đại diện</label>
                   <input class="form-control" type="file" name="thumbnail" id="thumbnail" accept="image/*">
                   <div id="thumbnail-preview" class="mt-2">
-                    <img src="<?php echo $row['product_image']; ?>" class="img-thumbnail" style="max-width: 100%;">
+                    <img src="<?php echo $row['product_image']; ?>" class="img-thumbnail" style="width: 150px; height: 150px;">
                   </div>
                 </div>
 
@@ -176,7 +213,7 @@ if (isset($_POST['edit_product_btn'])) {
                   <label class="form-label" for="sub-image-1">Ảnh phụ 1</label>
                   <input class="form-control" type="file" name="sub-image-1" id="sub-image-1" accept="image/*">
                   <div id="sub-preview-1" class="mt-2 d-flex gap-2 flex-wrap">
-                    <img src="<?php echo $row['product_image2']; ?>" class="img-thumbnail" style="max-width: 100%;">
+                    <img src="<?php echo $row['product_image2']; ?>" class="img-thumbnail" style="width: 150px; height: 150px;">
                   </div>
                 </div>
 
@@ -185,7 +222,7 @@ if (isset($_POST['edit_product_btn'])) {
                   <label class="form-label" for="sub-image-2">Ảnh phụ 2</label>
                   <input class="form-control" type="file" name="sub-image-2" id="sub-image-2" accept="image/*">
                   <div id="sub-preview-2" class="mt-2 d-flex gap-2 flex-wrap">
-                    <img src="<?php echo $row['product_image3']; ?>" class="img-thumbnail" style="max-width: 100%;">
+                    <img src="<?php echo $row['product_image3']; ?>" class="img-thumbnail" style="width: 150px; height: 150px;">
                   </div>
                 </div>
 
@@ -194,7 +231,7 @@ if (isset($_POST['edit_product_btn'])) {
                   <label class="form-label" for="sub-image-3">Ảnh phụ 3</label>
                   <input class="form-control" type="file" name="sub-image-3" id="sub-image-3" accept="image/*">
                   <div id="sub-preview-3" class="mt-2 d-flex gap-2 flex-wrap">
-                    <img src="<?php echo $row['product_image4']; ?>" class="img-thumbnail" style="max-width: 100%;">
+                    <img src="<?php echo $row['product_image4']; ?>" class="img-thumbnail" style="width: 150px; height: 150px;">
                   </div>
                 </div>
               </div>
@@ -202,6 +239,7 @@ if (isset($_POST['edit_product_btn'])) {
               <div class="row mb-2">
                 <div class="form-group col-md-4 mt-2">
                   <input class="btn btn-primary" type="submit" name="edit_product_btn" value="Lưu">
+                  <input class="btn btn-danger ms-2" type="submit" name="delete_product_btn" value="Xóa">
                 </div>
               </div>
             </div>

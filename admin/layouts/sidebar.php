@@ -24,13 +24,13 @@ if (isset($_GET['logout'])) {
     <li class="nav-item">
       <a href="dashboard.php" class="nav-link text-white sidebar-link">
         <i class="fa-solid fa-gauge sidebar-icon"></i>
-        <span class="sidebar-text">Dashboard</span>
+        <span class="sidebar-text">Trang chủ</span>
       </a>
     </li>
     <li>
       <a href="orders.php" class="nav-link text-white sidebar-link">
         <i class="fa-solid fa-receipt sidebar-icon"></i>
-        <span class="sidebar-text">Orders</span>
+        <span class="sidebar-text">Đơn hàng</span>
       </a>
     </li>
     <li>
