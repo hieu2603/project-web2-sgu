@@ -144,7 +144,8 @@ if (isset($_GET['search_btn'])) {
         <form id="searchForm" action="orders.php" method="get">
           <div class="mb-3" id="searchContainer">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
-            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-secondary">
+            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-outline-success">
+            <a href="orders.php" class="btn btn-secondary">Đặt lại</a>
           </div>
 
           <div id="filterContainer">
@@ -153,21 +154,21 @@ if (isset($_GET['search_btn'])) {
               <div class="col-md-4 d-flex align-items-center">
                 <label for="selectOrderStatus" class="form-label-inline">Trạng thái đơn</label>
                 <select name="orderStatus" id="selectOrderStatus" class="form-select">
-                  <option value="Tất cả">Tất cả</option>
-                  <option value="Chưa xác nhận">Chưa xác nhận</option>
-                  <option value="Chờ thanh toán">Chờ thanh toán</option>
-                  <option value="Đã xác nhận">Đã xác nhận</option>
-                  <option value="Thành công">Thành công</option>
-                  <option value="Hủy đơn">Hủy đơn</option>
+                  <option value="Tất cả" <?php if (isset($_GET['orderStatus']) && $_GET['orderStatus'] == 'Tất cả') echo 'selected'; ?>>Tất cả</option>
+                  <option value="Chưa xác nhận" <?php if (isset($_GET['orderStatus']) && $_GET['orderStatus'] == 'Chưa xác nhận') echo 'selected'; ?>>Chưa xác nhận</option>
+                  <option value="Chờ thanh toán" <?php if (isset($_GET['orderStatus']) && $_GET['orderStatus'] == 'Chờ thanh toán') echo 'selected'; ?>>Chờ thanh toán</option>
+                  <option value="Đã xác nhận" <?php if (isset($_GET['orderStatus']) && $_GET['orderStatus'] == 'Đã xác nhận') echo 'selected'; ?>>Đã xác nhận</option>
+                  <option value="Thành công" <?php if (isset($_GET['orderStatus']) && $_GET['orderStatus'] == 'Thành công') echo 'selected'; ?>>Thành công</option>
+                  <option value="Hủy đơn" <?php if (isset($_GET['orderStatus']) && $_GET['orderStatus'] == 'Hủy đơn') echo 'selected'; ?>>Hủy đơn</option>
                 </select>
               </div>
               <div class="col-md-4 d-flex align-items-center">
                 <label for="fromDay" class="form-label-inline">Từ ngày</label>
-                <input name="fromDay" id="fromDay" class="form-control" type="date">
+                <input name="fromDay" id="fromDay" class="form-control" type="date" value="<?php if (isset($_GET['fromDay'])) echo $_GET['fromDay']; ?>">
               </div>
               <div class="col-md-4 d-flex align-items-center">
                 <label for="toDay" class="form-label-inline">Đến ngày</label>
-                <input name="toDay" id="toDay" class="form-control" type="date">
+                <input name="toDay" id="toDay" class="form-control" type="date" value="<?php if (isset($_GET['toDay'])) echo $_GET['toDay']; ?>">
               </div>
             </div>
 
@@ -296,7 +297,13 @@ if (isset($_GET['search_btn'])) {
     });
   </script>
 
-  <script src="../assets/js/index.js"></script>
+  <script>
+    const selectedProvince = "<?php echo isset($_GET['province']) ? $_GET['province'] : ''; ?>";
+    const selectedDistrict = "<?php echo isset($_GET['district']) ? $_GET['district'] : ''; ?>";
+    const selectedWard = "<?php echo isset($_GET['ward']) ? $_GET['ward'] : ''; ?>";
+  </script>
+
+  <script src="../admin/assets/js/index.js"></script>
 </body>
 
 </html>

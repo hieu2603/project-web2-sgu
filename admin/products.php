@@ -160,7 +160,8 @@ if (isset($_GET['search_btn'])) {
             <a class="btn btn-primary" href="add_product.php">Thêm</a>
             <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm... (ID, tên sản phẩm, màu sắc)">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
-            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-secondary">
+            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-outline-success">
+            <a href="products.php" class="btn btn-secondary">Đặt lại</a>
           </div>
 
           <div id="filterContainer">
@@ -168,9 +169,9 @@ if (isset($_GET['search_btn'])) {
               <div class="col-md-3 d-flex align-items-center">
                 <label for="selectCategory" class="form-label-inline" style="min-width: 70px;">Phân loại</label>
                 <select name="category" id="selectCategory" class="form-select">
-                  <option value="Tất cả">Tất cả</option>
+                  <option value="Tất cả" <?php if (isset($_GET['category']) && $_GET['category'] == "Tất cả") echo 'selected'; ?>>Tất cả</option>
                   <?php while ($category_row = $categories->fetch_assoc()) { ?>
-                    <option value="<?php echo $category_row['category_id']; ?>">
+                    <option value="<?php echo $category_row['category_id']; ?>" <?php if (isset($_GET['category']) && $_GET['category'] == $category_row['category_id']) echo 'selected'; ?>>
                       <?php echo $category_row['category_name']; ?>
                     </option>
                   <?php } ?>
@@ -178,108 +179,113 @@ if (isset($_GET['search_btn'])) {
               </div>
               <div class="col-md-2 d-flex align-items-center">
                 <label for="minPrice" class="form-label-inline" style="min-width: 30px;">Giá</label>
-                <input style="width: 150px;" name="minPrice" id="minPrice" class="form-control" type="number" placeholder="Từ">
+                <input style="width: 150px;" name="minPrice" id="minPrice" class="form-control" type="number" placeholder="Từ" value="<?php if (isset($_GET['minPrice'])) echo $_GET['minPrice']; ?>">
               </div>
               <div class="col-md-2 d-flex align-items-center">
                 <label for="maxPrice" class="form-label-inline" style="min-width: 30px;">Giá</label>
-                <input style="width: 150px;" name="maxPrice" id="maxPrice" class="form-control" type="number" placeholder="Đến">
+                <input style="width: 150px;" name="maxPrice" id="maxPrice" class="form-control" type="number" placeholder="Đến" value="<?php if (isset($_GET['maxPrice'])) echo $_GET['maxPrice']; ?>">
               </div>
               <div class="col-md-3 d-flex align-items-center">
                 <label for="sortedBy" class="form-label-inline" style="min-width: 70px;">Lọc theo</label>
                 <select name="sortedBy" id="sortedBy" class="form-select">
-                  <option value="Hàng mới">Hàng mới</option>
-                  <option value="Bán chạy">Bán chạy</option>
-                  <option value="Giá thấp đến cao">Giá thấp đến cao</option>
-                  <option value="Giá cao đến thấp">Giá cao đến thấp</option>
-                  <option value="Đang bán">Đang bán</option>
-                  <option value="Ngừng bán">Ngừng bán</option>
+                  <option value="Hàng mới" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Hàng mới') echo 'selected'; ?>>Hàng mới</option>
+                  <option value="Bán chạy" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Bán chạy') echo 'selected'; ?>>Bán chạy</option>
+                  <option value="Giá thấp đến cao" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Giá thấp đến cao') echo 'selected'; ?>>Giá thấp đến cao</option>
+                  <option value="Giá cao đến thấp" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Giá cao đến thấp') echo 'selected'; ?>>Giá cao đến thấp</option>
+                  <option value="Đang bán" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Đang bán') echo 'selected'; ?>>Đang bán</option>
+                  <option value="Ngừng bán" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Ngừng bán') echo 'selected'; ?>>Ngừng bán</option>
                 </select>
               </div>
             </div>
           </div>
         </form>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Hình ảnh</th>
-              <th scope="col">Tên sản phẩm</th>
-              <th scope="col">Giá</th>
-              <th scope="col">Phân loại</th>
-              <th scope="col">Màu sắc</th>
-              <th scope="col">Trạng thái</th>
-              <th scope="col">Chỉnh sửa</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($products as $product) { ?>
-              <tr class="align-middle">
-                <th scope="row"><?php echo $product['product_id']; ?></th>
-                <td><img src="<?php echo $product['product_image']; ?>" style="width: 70px; height: 70px;"></td>
-                <td><?php echo $product['product_name']; ?></td>
-                <td>$<?php echo $product['product_price']; ?></td>
-                <td><?php echo $product['category_name']; ?></td>
-                <td><?php echo $product['product_color']; ?></td>
-                <td><?php echo $product['product_status']; ?></td>
-                <td>
-                  <a class="btn btn-warning" href="edit_product.php?product_id=<?php echo $product['product_id']; ?>">
-                    Sửa
-                  </a>
-                </td>
+
+        <?php if ($total_no_of_pages > 0) { ?>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Hình ảnh</th>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Giá</th>
+                <th scope="col">Phân loại</th>
+                <th scope="col">Màu sắc</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Chỉnh sửa</th>
               </tr>
-            <?php } ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php foreach ($products as $product) { ?>
+                <tr class="align-middle">
+                  <th scope="row"><?php echo $product['product_id']; ?></th>
+                  <td><img src="<?php echo $product['product_image']; ?>" style="width: 70px; height: 70px;"></td>
+                  <td><?php echo $product['product_name']; ?></td>
+                  <td>$<?php echo $product['product_price']; ?></td>
+                  <td><?php echo $product['category_name']; ?></td>
+                  <td><?php echo $product['product_color']; ?></td>
+                  <td><?php echo $product['product_status']; ?></td>
+                  <td>
+                    <a class="btn btn-warning" href="edit_product.php?product_id=<?php echo $product['product_id']; ?>">
+                      Sửa
+                    </a>
+                  </td>
+                </tr>
+              <?php } ?>
+            </tbody>
+          </table>
 
-        <nav aria-label="Page Navigation Example">
-          <ul class="pagination mt-5 justify-content-center">
-            <li class="page-item <?php if ($page <= 1) {
-                                    echo "disabled";
-                                  } ?>">
-              <a class="page-link" href="<?php if ($page <= 1) {
-                                            echo "#";
-                                          } else {
-                                            echo "?" . $base_query_string . "&page=" . ($page - 1);
-                                          } ?>">Previous</a>
-            </li>
+          <nav aria-label="Page Navigation Example">
+            <ul class="pagination mt-5 justify-content-center">
+              <li class="page-item <?php if ($page <= 1) {
+                                      echo "disabled";
+                                    } ?>">
+                <a class="page-link" href="<?php if ($page <= 1) {
+                                              echo "#";
+                                            } else {
+                                              echo "?" . $base_query_string . "&page=" . ($page - 1);
+                                            } ?>">Previous</a>
+              </li>
 
-            <?php if ($total_no_of_pages >= 3) { ?>
-              <li class="page-item">
-                <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">...</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?<?php echo $base_query_string; ?>&page=<?php echo $total_no_of_pages; ?>"><?php echo $total_no_of_pages; ?></a>
-              </li>
-            <?php } elseif ($total_no_of_pages == 1) { ?>
-              <li class="page-item">
-                <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
-              </li>
-            <?php } else { ?>
-              <li class="page-item">
-                <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
-              </li>
-            <?php } ?>
+              <?php if ($total_no_of_pages >= 3) { ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">...</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=<?php echo $total_no_of_pages; ?>"><?php echo $total_no_of_pages; ?></a>
+                </li>
+              <?php } elseif ($total_no_of_pages == 1) { ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+                </li>
+              <?php } else { ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=1">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?<?php echo $base_query_string; ?>&page=2">2</a>
+                </li>
+              <?php } ?>
 
-            <li class="page-item <?php if ($page >= $total_no_of_pages) {
-                                    echo "disabled";
-                                  } ?>">
-              <a class="page-link" href="<?php if ($page >= $total_no_of_pages) {
-                                            echo "#";
-                                          } else {
-                                            echo "?" . $base_query_string . "&page=" . ($page + 1);
-                                          } ?>">Next</a>
-            </li>
-          </ul>
-        </nav>
+              <li class="page-item <?php if ($page >= $total_no_of_pages) {
+                                      echo "disabled";
+                                    } ?>">
+                <a class="page-link" href="<?php if ($page >= $total_no_of_pages) {
+                                              echo "#";
+                                            } else {
+                                              echo "?" . $base_query_string . "&page=" . ($page + 1);
+                                            } ?>">Next</a>
+              </li>
+            </ul>
+          </nav>
+        <?php } else { ?>
+          <p>Không tìm thấy kết quả</p>
+        <?php } ?>
       </div>
     </div>
   </div>

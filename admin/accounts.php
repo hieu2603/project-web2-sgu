@@ -125,7 +125,8 @@ if (isset($_GET['search_btn'])) {
             <a class="btn btn-primary" href="add_account.php">Thêm</a>
             <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm...">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
-            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-secondary">
+            <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-outline-success">
+            <a href="accounts.php" class="btn btn-secondary">Đặt lại</a>
           </div>
 
           <div id="filterContainer">
@@ -133,17 +134,17 @@ if (isset($_GET['search_btn'])) {
               <div class="col-md-3 d-flex align-items-center">
                 <label for="selectRole" class="form-label-inline" style="min-width: 65px;">Vai trò</label>
                 <select name="role" id="selectRole" class="form-select">
-                  <option value="Tất cả">Tất cả</option>
-                  <option value="User">User</option>
-                  <option value="Admin">Admin</option>
+                  <option value="Tất cả" <?php if (isset($_GET['role']) && $_GET['role'] == 'Tất cả') echo 'selected'; ?>>Tất cả</option>
+                  <option value="User" <?php if (isset($_GET['role']) && $_GET['role'] == 'User') echo 'selected'; ?>>User</option>
+                  <option value="Admin" <?php if (isset($_GET['role']) && $_GET['role'] == 'Admin') echo 'selected'; ?>>Admin</option>
                 </select>
               </div>
               <div class="col-md-3 d-flex align-items-center">
                 <label for="selectUserStatus" class="form-label-inline" style="min-width: 85px;">Trạng thái</label>
                 <select name="status" id="selectUserStatus" class="form-select">
-                  <option value="Tất cả">Tất cả</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
+                  <option value="Tất cả" <?php if (isset($_GET['status']) && $_GET['status'] == 'Tất cả') echo 'selected'; ?>>Tất cả</option>
+                  <option value="Active" <?php if (isset($_GET['status']) && $_GET['status'] == 'Active') echo 'selected'; ?>>Active</option>
+                  <option value="Inactive" <?php if (isset($_GET['status']) && $_GET['status'] == 'Inactive') echo 'selected'; ?>>Inactive</option>
                 </select>
               </div>
             </div>

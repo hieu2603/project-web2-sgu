@@ -11,12 +11,19 @@ fetch(`${API_URL}/p`)
     const provinces = data;
 
     provinces.forEach(province => {
+      const selected = (province.name === selectedProvince) ? 'selected' : '';
       selectProvince.innerHTML += `
-        <option value="${province.name}" data-code="${province.code}">
+        <option value="${province.name}" data-code="${province.code}" ${selected}>
           ${province.name}
         </option>
       `;
     });
+
+    // Nếu có tỉnh đã chọn thì gọi fetchDistricts
+    const selectedOption = [...selectProvince.options].find(opt => opt.selected);
+    if (selectedOption && selectedOption.dataset.code) {
+      fetchDistricts(selectedOption.dataset.code);
+    }
   })
   .catch(error => console.error('Lỗi khi gọi API: ', error));
 
@@ -30,12 +37,18 @@ function fetchDistricts(provinceCode) {
       selectDistrict.innerHTML = `<option value="">Chọn quận/huyện</option>`;
 
       districts.forEach(district => {
+        const selected = (district.name === selectedDistrict) ? 'selected' : '';
         selectDistrict.innerHTML += `
-          <option value="${district.name}" data-code="${district.code}">
+          <option value="${district.name}" data-code="${district.code}" ${selected}>
             ${district.name}
           </option>
         `;
       });
+
+      const selectedOption = [...selectDistrict.options].find(opt => opt.selected);
+      if (selectedOption && selectedOption.dataset.code) {
+        fetchWards(selectedOption.dataset.code);
+      }
     })
     .catch(error => console.error('Lỗi khi gọi API: ', error));
 }
@@ -50,8 +63,9 @@ function fetchWards(districtCode) {
       selectWard.innerHTML = `<option value="">Chọn phường/xã</option>`;
 
       wards.forEach(ward => {
+        const selected = (ward.name === selectedWard) ? 'selected' : '';
         selectWard.innerHTML += `
-          <option value="${ward.name}" data-code="${ward.code}">
+          <option value="${ward.name}" data-code="${ward.code}" ${selected}>
             ${ward.name}
           </option>
         `;
@@ -63,14 +77,13 @@ function fetchWards(districtCode) {
 selectProvince.addEventListener('change', event => {
   const provinceCode = selectProvince.selectedOptions[0].dataset.code;
 
-  // Reset select quận/huyện và phường/xã
   selectDistrict.innerHTML = `<option value="">Chọn quận/huyện</option>`;
   selectWard.innerHTML = `<option value="">Chọn phường/xã</option>`;
 
   if (!provinceCode) return;
 
   fetchDistricts(provinceCode);
-})
+});
 
 selectDistrict.addEventListener('change', event => {
   const districtCode = selectDistrict.selectedOptions[0].dataset.code;
@@ -81,4 +94,4 @@ selectDistrict.addEventListener('change', event => {
   }
 
   fetchWards(districtCode);
-})
+});

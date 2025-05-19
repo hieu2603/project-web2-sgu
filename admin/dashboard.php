@@ -166,7 +166,7 @@ $total_spent_result = $total_spent_stmt->get_result();
             </div>
             <div class="col-md-2">
               <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
-              <a href="dashboard.php" class="btn btn-secondary ms-2">Reset</a>
+              <a href="dashboard.php" class="btn btn-secondary ms-2">Đặt lại</a>
             </div>
           </div>
         </form>
