@@ -13,6 +13,8 @@ $account_id = (int)$_GET['account_id'];
 $fromDay = isset($_POST['fromDay']) && $_POST['fromDay'] !== '' ? $_POST['fromDay'] : null;
 $toDay = isset($_POST['toDay']) && $_POST['toDay'] !== '' ? $_POST['toDay'] : null;
 
+$base_url = "orders_list.php?account_id=" . $account_id;
+
 if (!$account_id || !is_numeric($account_id)) {
   header('location: dashboard.php');
   exit;
@@ -149,33 +151,33 @@ $orders = $stmt2->get_result();
                 <a class="page-link" href="<?php if ($page <= 1) {
                                               echo "#";
                                             } else {
-                                              echo "&page=" . ($page - 1);
+                                              echo $base_url . "&page=" . ($page - 1);
                                             } ?>">Previous</a>
               </li>
 
               <?php if ($total_no_of_pages >= 3) { ?>
                 <li class="page-item">
-                  <a class="page-link" href="&page=1">1</a>
+                  <a class="page-link" href=<?php echo $base_url . "&page=1"; ?>>1</a>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" href="&page=2">2</a>
+                  <a class="page-link" href=<?php echo $base_url . "&page=2"; ?>>2</a>
                 </li>
                 <li class="page-item">
                   <a class="page-link" href="#">...</a>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" href="&page=<?php echo $total_no_of_pages; ?>"><?php echo $total_no_of_pages; ?></a>
+                  <a class="page-link" href=<?php echo $base_url . "&page=" . $total_no_of_pages; ?>><?php echo $total_no_of_pages; ?></a>
                 </li>
               <?php } elseif ($total_no_of_pages == 1) { ?>
                 <li class="page-item">
-                  <a class="page-link" href="&page=1">1</a>
+                  <a class="page-link" href=<?php echo $base_url . "&page=1" ?>>1</a>
                 </li>
               <?php } else { ?>
                 <li class="page-item">
-                  <a class="page-link" href="&page=1">1</a>
+                  <a class="page-link" href=<?php echo $base_url . "&page=1" ?>>1</a>
                 </li>
                 <li class="page-item">
-                  <a class="page-link" href="&page=2">2</a>
+                  <a class="page-link" href=<?php echo $base_url . "&page=2" ?>>2</a>
                 </li>
               <?php } ?>
 
@@ -185,7 +187,7 @@ $orders = $stmt2->get_result();
                 <a class="page-link" href="<?php if ($page >= $total_no_of_pages) {
                                               echo "#";
                                             } else {
-                                              echo "&page=" . ($page + 1);
+                                              echo $base_url . "&page=" . ($page + 1);
                                             } ?>">Next</a>
               </li>
             </ul>
