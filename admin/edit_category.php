@@ -31,6 +31,11 @@ $row = $category->fetch_assoc();
 if (isset($_POST['edit_category_btn'])) {
   $category_name = $_POST['category_name'];
 
+  if (empty($category_name)) {
+    header('location: edit_category.php?error=Thông tin không được để trống&category_id=' . $category_id);
+    exit;
+  }
+
   $stmt = $conn->prepare("UPDATE categories SET category_name = ? WHERE category_id = ?");
   $stmt->bind_param('si', $category_name, $category_id);
 
@@ -90,7 +95,7 @@ if (isset($_POST['delete_category_btn'])) {
       <?php include '../admin/layouts/sidebar.php'; ?>
 
       <div class="col py-3">
-        <h2>Sửa thông tin phân loại sản phẩm</h2>
+        <h2 class="text-center mb-3">Sửa thông tin phân loại sản phẩm</h2>
         <div class="container mx-auto">
           <form action="edit_category.php?category_id=<?php echo $_GET['category_id']; ?>" method="post">
             <div class="container-fluid">
@@ -100,6 +105,7 @@ if (isset($_POST['delete_category_btn'])) {
                   <input value="<?php echo $row['category_name']; ?>" type="text" name="category_name" class="form-control" id="category-name">
                 </div>
               </div>
+              <span class="text-danger"><?php if (isset($_GET['error'])) echo $_GET['error']; ?></span>
               <div class="row mb-2">
                 <div class="form-group col-md-4 mt-2">
                   <input type="hidden" name="category_id" value="<?php echo $category_id ?>">

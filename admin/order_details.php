@@ -112,7 +112,7 @@ if (isset($_POST['cancel_order_btn'])) {
       <?php include '../admin/layouts/sidebar.php'; ?>
 
       <div class="col py-3">
-        <h2>Chi tiết đơn hàng</h2>
+        <h2 class="text-center mb-3">Chi tiết đơn hàng</h2>
         <div class="container mx-auto">
           <div class="row">
             <div class="col-md-4">
@@ -122,7 +122,7 @@ if (isset($_POST['cancel_order_btn'])) {
               <p><strong>Địa chỉ:</strong> <?php echo $order_row['address']; ?></p>
             </div>
             <div class="col-md-4">
-              <p><strong>Tổng tiển:</strong> <?php echo $order_row['order_cost']; ?>đ</p>
+              <p><strong>Tổng tiển:</strong> <?php echo number_format($order_row['order_cost'], 0, ',', '.'); ?>đ</p>
               <p><strong>Người nhận:</strong> <?php echo $order_row['receiver_name']; ?></p>
               <p><strong>Quận/huyện:</strong> <?php echo $order_row['district']; ?></p>
               <p><strong>Ngày đặt hàng:</strong> <?php echo $order_row['order_date']; ?></p>
@@ -150,7 +150,7 @@ if (isset($_POST['cancel_order_btn'])) {
           </form>
 
           <div class="row">
-            <table class="table">
+            <table class="table text-center">
               <thead>
                 <tr>
                   <th scope="col">ID</th>
@@ -165,7 +165,7 @@ if (isset($_POST['cancel_order_btn'])) {
                   <th><?php echo $order_items_row['item_id']; ?></th>
                   <td><img src="<?php echo $order_items_row['product_image']; ?>" style="width: 70px; height: 70px;"></td>
                   <td><?php echo $order_items_row['product_name']; ?></td>
-                  <td><?php echo $order_items_row['product_price']; ?>đ</td>
+                  <td><?php echo number_format($order_items_row['product_price'], 0, ',', '.'); ?>đ</td>
                   <td><?php echo $order_items_row['product_quantity']; ?></td>
                 </tr>
               </tbody>

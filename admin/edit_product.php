@@ -97,7 +97,7 @@ if (isset($_POST['edit_product_btn'])) {
     header('location: products.php');
     exit;
   } else {
-    header('location: edit_product.php?error=Lỗi khi chỉnh sửa sản phẩm');
+    header('location: edit_product.php?error=Lỗi khi chỉnh sửa sản phẩm&product_id=' . $product_id);
   }
 }
 
@@ -129,7 +129,7 @@ if (isset($_POST['delete_product_btn'])) {
     $delete_product_stmt = $conn->prepare("DELETE FROM products WHERE product_id = ?");
     $delete_product_stmt->bind_param('i', $product_id);
     if ($delete_product_stmt->execute()) {
-      header('location: products.php?success=Xóa thành công');
+      header('location: products.php');
       exit;
     } else {
       header('location: edit_product.php?product_id=' . $product_id . '&error=Lỗi khi xóa sản phẩm');
@@ -235,6 +235,8 @@ if (isset($_POST['delete_product_btn'])) {
                   </div>
                 </div>
               </div>
+
+              <span class="text-danger"><?php if (isset($_GET['error'])) echo $_GET['error']; ?></span>
 
               <div class="row mb-2">
                 <div class="form-group col-md-4 mt-2">

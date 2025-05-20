@@ -44,12 +44,13 @@ if (isset($_POST['login_btn'])) {
       $_SESSION['admin_email'] = $account_email;
       $_SESSION['admin_logged_in'] = true;
 
-      header('location: dashboard.php?login_success=Logged in successfully');
+      header('location: dashboard.php');
+      exit;
     } else {
       header('location: login.php?error=Tài khoản hoặc mật khẩu không chính xác');
     }
   } else {
-    header('location: login.php?Something went wrong. Please try again');
+    header('location: login.php?error=Có lỗi xảy ra. Vui lòng thử lại sau');
   }
 }
 
@@ -70,7 +71,7 @@ if (isset($_POST['login_btn'])) {
 
 <body>
   <div class="login">
-    <h1 class="text-center">Admin Login</h1>
+    <h2 class="text-center">Đăng Nhập Admin</h2>
     <form action="login.php" method="post">
       <p class="text-center" style="color: red;"><?php if (isset($_GET['error'])) echo $_GET['error']; ?></p>
       <div class="form-group">
@@ -78,16 +79,24 @@ if (isset($_POST['login_btn'])) {
         <input class="form-control" name="email" type="email" id="email">
       </div>
       <div class="form-group">
-        <label class="form-label" for="password">Password</label>
+        <label class="form-label" for="password">Mật khẩu</label>
         <input class="form-control" name="password" type="password" id="password">
       </div>
-      <input class="btn btn-primary w-100" name="login_btn" type="submit" value="LOGIN">
+      <div class="form-check mt-2">
+        <input class="form-check-input" type="checkbox" id="checkboxPassword">
+        <label class="form-check-label" for="checkboxPassword">
+          Hiện mật khẩu
+        </label>
+      </div>
+      <input class="btn btn-primary w-100" name="login_btn" type="submit" value="ĐĂNG NHẬP">
     </form>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
+
+  <script src="../main.js"></script>
 </body>
 
 </html>

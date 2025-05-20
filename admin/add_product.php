@@ -81,7 +81,8 @@ if (isset($_POST['add_product_btn'])) {
     header('location: products.php');
     exit;
   } else {
-    echo "<script>alert('Lỗi khi thêm sản phẩm mới: " . $stmt->error . "');</script>";
+    header('location: add_product.php?error=Lỗi khi thêm sản phẩm mới');
+    exit;
   }
 }
 
@@ -106,7 +107,7 @@ if (isset($_POST['add_product_btn'])) {
       <?php include '../admin/layouts/sidebar.php'; ?>
 
       <div class="col py-3">
-        <h2>Thêm sản phẩm mới</h2>
+        <h2 class="text-center mb-3">Thêm sản phẩm mới</h2>
         <div class="container mx-auto">
           <form id="uploadForm" action="add_product.php" method="post" enctype="multipart/form-data">
             <div class="container-fluid">
@@ -173,6 +174,8 @@ if (isset($_POST['add_product_btn'])) {
                   <div id="sub-preview-3" class="mt-2 d-flex gap-2 flex-wrap"></div>
                 </div>
               </div>
+
+              <span class="text-danger"><?php if (isset($_GET['error'])) echo $_GET['error']; ?></span>
 
               <div class="row mb-2">
                 <div class="form-group col-md-4 mt-2">

@@ -153,12 +153,12 @@ if (isset($_GET['search_btn'])) {
 
       <!-- Content (optional) -->
       <div class="col py-3">
-        <h2>Quản lý sản phẩm</h2>
+        <h2 class="text-center mb-3">Quản Lý Sản Phẩm</h2>
 
         <form id="searchForm" action="products.php" method="get">
           <div class="mb-3" id="searchContainer">
             <a class="btn btn-primary" href="add_product.php">Thêm</a>
-            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm... (ID, tên sản phẩm, màu sắc)">
+            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm... (ID, tên sản phẩm, màu sắc)" value="<?php if (isset($_GET['search'])) echo $_GET['search']; ?>">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
             <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-outline-success">
             <a href="products.php" class="btn btn-secondary">Đặt lại</a>
@@ -189,7 +189,6 @@ if (isset($_GET['search_btn'])) {
                 <label for="sortedBy" class="form-label-inline" style="min-width: 70px;">Lọc theo</label>
                 <select name="sortedBy" id="sortedBy" class="form-select">
                   <option value="Hàng mới" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Hàng mới') echo 'selected'; ?>>Hàng mới</option>
-                  <option value="Bán chạy" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Bán chạy') echo 'selected'; ?>>Bán chạy</option>
                   <option value="Giá thấp đến cao" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Giá thấp đến cao') echo 'selected'; ?>>Giá thấp đến cao</option>
                   <option value="Giá cao đến thấp" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Giá cao đến thấp') echo 'selected'; ?>>Giá cao đến thấp</option>
                   <option value="Đang bán" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Đang bán') echo 'selected'; ?>>Đang bán</option>
@@ -201,7 +200,7 @@ if (isset($_GET['search_btn'])) {
         </form>
 
         <?php if ($total_no_of_pages > 0) { ?>
-          <table class="table">
+          <table class="table text-center">
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -220,7 +219,7 @@ if (isset($_GET['search_btn'])) {
                   <th scope="row"><?php echo $product['product_id']; ?></th>
                   <td><img src="<?php echo $product['product_image']; ?>" style="width: 70px; height: 70px;"></td>
                   <td><?php echo $product['product_name']; ?></td>
-                  <td>$<?php echo $product['product_price']; ?></td>
+                  <td><?php echo number_format($product['product_price'], 0, ',', '.'); ?>đ</td>
                   <td><?php echo $product['category_name']; ?></td>
                   <td><?php echo $product['product_color']; ?></td>
                   <td><?php echo $product['product_status']; ?></td>
@@ -243,7 +242,7 @@ if (isset($_GET['search_btn'])) {
                                               echo "#";
                                             } else {
                                               echo "?" . $base_query_string . "&page=" . ($page - 1);
-                                            } ?>">Previous</a>
+                                            } ?>"><</a>
               </li>
 
               <?php if ($total_no_of_pages >= 3) { ?>
@@ -279,7 +278,7 @@ if (isset($_GET['search_btn'])) {
                                               echo "#";
                                             } else {
                                               echo "?" . $base_query_string . "&page=" . ($page + 1);
-                                            } ?>">Next</a>
+                                            } ?>">></a>
               </li>
             </ul>
           </nav>

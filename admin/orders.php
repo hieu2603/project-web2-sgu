@@ -140,7 +140,7 @@ if (isset($_GET['search_btn'])) {
 
       <!-- Content (optional) -->
       <div class="col py-3">
-        <h2>Quản lý đơn hàng</h2>
+        <h2 class="text-center mb-3">Quản Lý Đơn Hàng</h2>
         <form id="searchForm" action="orders.php" method="get">
           <div class="mb-3" id="searchContainer">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
@@ -197,7 +197,7 @@ if (isset($_GET['search_btn'])) {
         </form>
 
         <?php if ($total_no_of_pages > 0) { ?>
-          <table class="table">
+          <table class="table text-center">
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -205,7 +205,6 @@ if (isset($_GET['search_btn'])) {
                 <th scope="col">Tỉnh/thành phố</th>
                 <th scope="col">Quận/huyện</th>
                 <th scope="col">Phường/xã</th>
-                <th scope="col">Địa chỉ</th>
                 <th scope="col">Ngày đặt hàng</th>
                 <th scope="col">Chi tiết đơn hàng</th>
               </tr>
@@ -220,7 +219,6 @@ if (isset($_GET['search_btn'])) {
                   <td><?php echo $order_row['province']; ?></td>
                   <td><?php echo $order_row['district']; ?></td>
                   <td><?php echo $order_row['ward']; ?></td>
-                  <td><?php echo $order_row['address']; ?></td>
                   <td><?php echo $order_row['order_date']; ?></td>
                   <td>
                     <a class="btn btn-primary" href="order_details.php?order_id=<?php echo $order_row['order_id']; ?>">
@@ -240,7 +238,7 @@ if (isset($_GET['search_btn'])) {
                                               echo "#";
                                             } else {
                                               echo "?" . $base_query_string . "&page=" . ($page - 1);
-                                            } ?>">Previous</a>
+                                            } ?>"><</a>
               </li>
 
               <?php if ($total_no_of_pages >= 3) { ?>
@@ -276,7 +274,7 @@ if (isset($_GET['search_btn'])) {
                                               echo "#";
                                             } else {
                                               echo "?" . $base_query_string . "&page=" . ($page + 1);
-                                            } ?>">Next</a>
+                                            } ?>">></a>
               </li>
             </ul>
           </nav>

@@ -31,11 +31,12 @@ if (isset($_GET['search_btn'])) {
 
   // Search by keyword (name, email)
   if (!empty($search)) {
-    $baseQuery .= " AND (account_name LIKE ? OR account_email LIKE ?)";
+    $baseQuery .= " AND (account_id LIKE ? OR account_name LIKE ? OR account_email LIKE ?)";
     $searchParam = '%' . trim($search) . '%';
     $params[] = $searchParam;
     $params[] = $searchParam;
-    $types .= 'ss';
+    $params[] = $searchParam;
+    $types .= 'sss';
   }
 
   if (!empty($role) && $role !== 'Tất cả') {
@@ -118,12 +119,12 @@ if (isset($_GET['search_btn'])) {
 
       <!-- Content (optional) -->
       <div class="col py-3">
-        <h2>Quản lý tài khoản</h2>
+        <h2 class="text-center mb-3">Quản Lý Tài Khoản</h2>
 
         <form id="searchForm" action="accounts.php" method="get">
           <div class="mb-3" id="searchContainer">
             <a class="btn btn-primary" href="add_account.php">Thêm</a>
-            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm...">
+            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm..." value="<?php if (isset($_GET['search'])) echo $_GET['search']; ?>">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
             <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-outline-success">
             <a href="accounts.php" class="btn btn-secondary">Đặt lại</a>
@@ -152,7 +153,7 @@ if (isset($_GET['search_btn'])) {
         </form>
 
         <?php if ($total_no_of_pages > 0) { ?>
-          <table class="table">
+          <table class="table text-center">
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -193,7 +194,7 @@ if (isset($_GET['search_btn'])) {
                                               echo "#";
                                             } else {
                                               echo "?" . $base_query_string . "&page=" . ($page - 1);
-                                            } ?>">Previous</a>
+                                            } ?>"><</a>
               </li>
 
               <?php if ($total_no_of_pages >= 3) { ?>
@@ -229,7 +230,7 @@ if (isset($_GET['search_btn'])) {
                                               echo "#";
                                             } else {
                                               echo "?" . $base_query_string . "&page=" . ($page + 1);
-                                            } ?>">Next</a>
+                                            } ?>">></a>
               </li>
             </ul>
           </nav>

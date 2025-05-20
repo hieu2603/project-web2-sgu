@@ -103,7 +103,7 @@ $total_spent_result = $total_spent_stmt->get_result();
 
       <!-- Content (optional) -->
       <div class="col py-3">
-        <h2>Thống kê</h2>
+        <h2 class="text-center mb-3">Thống Kê</h2>
         <div class="row mb-4">
           <div class="col-12 col-md-3">
             <div class="card shadow">
@@ -112,7 +112,7 @@ $total_spent_result = $total_spent_stmt->get_result();
                   Doanh thu 30 ngày gần nhất
                 </h6>
                 <p class="mb-2">
-                  <?php echo $revenue_last_30_days_row['revenue_last_30_days']; ?>đ
+                  <?php echo number_format($revenue_last_30_days_row['revenue_last_30_days'], 0, ',', '.') . 'đ'; ?>
                 </p>
               </div>
             </div>
@@ -172,13 +172,13 @@ $total_spent_result = $total_spent_stmt->get_result();
         </form>
 
         <?php if ($total_spent_result->num_rows > 0) { ?>
-          <table class="table">
+          <table class="table text-center">
             <thead>
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Tên tài khoản</th>
                 <th scope="col">Tổng tiền đã mua</th>
-                <th scope="col">Danh sách đơn hàng đã mua</th>
+                <th scope="col">Danh sách đơn hàng</th>
               </tr>
             </thead>
             <tbody>
@@ -186,7 +186,7 @@ $total_spent_result = $total_spent_stmt->get_result();
                 <tr class="align-middle">
                   <th scope="row"><?php echo $total_spent_row['account_id']; ?></th>
                   <td><?php echo $total_spent_row['account_name']; ?></td>
-                  <td><?php echo $total_spent_row['total_spent']; ?></td>
+                  <td><?php echo number_format($total_spent_row['total_spent'], 0, ',', '.'); ?>đ</td>
                   <td>
                     <form action="orders_list.php?account_id=<?php echo $total_spent_row['account_id']; ?>" method="post">
                       <input type="hidden" name="fromDay" value="<?php if (isset($_GET['fromDay'])) echo $_GET['fromDay']; ?>">

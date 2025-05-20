@@ -106,10 +106,10 @@ $orders = $stmt2->get_result();
 
       <!-- Content (optional) -->
       <div class="col py-3">
-        <h2>Danh sách đơn hàng</h2>
+        <h2 class="text-center mb-3">Danh sách đơn hàng</h2>
 
         <?php if ($total_no_of_pages > 0) { ?>
-          <table class="table">
+          <table class="table text-center">
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -117,7 +117,6 @@ $orders = $stmt2->get_result();
                 <th scope="col">Tỉnh/thành phố</th>
                 <th scope="col">Quận/huyện</th>
                 <th scope="col">Phường/xã</th>
-                <th scope="col">Địa chỉ</th>
                 <th scope="col">Ngày đặt hàng</th>
                 <th scope="col">Chi tiết đơn hàng</th>
               </tr>
@@ -132,7 +131,6 @@ $orders = $stmt2->get_result();
                   <td><?php echo $order_row['province']; ?></td>
                   <td><?php echo $order_row['district']; ?></td>
                   <td><?php echo $order_row['ward']; ?></td>
-                  <td><?php echo $order_row['address']; ?></td>
                   <td><?php echo $order_row['order_date']; ?></td>
                   <td>
                     <a class="btn btn-primary" href="order_details.php?order_id=<?php echo $order_row['order_id']; ?>">
@@ -152,7 +150,7 @@ $orders = $stmt2->get_result();
                                               echo "#";
                                             } else {
                                               echo $base_url . "&page=" . ($page - 1);
-                                            } ?>">Previous</a>
+                                            } ?>"><</a>
               </li>
 
               <?php if ($total_no_of_pages >= 3) { ?>
@@ -188,7 +186,7 @@ $orders = $stmt2->get_result();
                                               echo "#";
                                             } else {
                                               echo $base_url . "&page=" . ($page + 1);
-                                            } ?>">Next</a>
+                                            } ?>">></a>
               </li>
             </ul>
           </nav>

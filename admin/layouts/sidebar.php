@@ -3,6 +3,7 @@
 // Logout
 if (isset($_GET['logout'])) {
   if (isset($_SESSION['admin_logged_in'])) {
+    unset($_SESSION['admin_id']);
     unset($_SESSION['admin_logged_in']);
     unset($_SESSION['admin_name']);
     unset($_SESSION['admin_email']);
@@ -15,8 +16,8 @@ if (isset($_GET['logout'])) {
 
 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex flex-column min-vh-100">
   <!-- Logo -->
-  <a href="#" class="d-flex align-items-center justify-content-center py-3 mb-3 text-white text-decoration-none border-bottom">
-    <span class="fs-4 d-none d-sm-inline">Admin Panel</span>
+  <a href="dashboard.php" class="d-flex align-items-center justify-content-center py-3 mb-3 text-white text-decoration-none border-bottom">
+    <span class="fs-4 d-none d-sm-inline">Trang Admin</span>
   </a>
 
   <!-- Navigation -->
@@ -63,11 +64,11 @@ if (isset($_GET['logout'])) {
         data-bs-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
-        Account
+        Tài khoản
       </button>
       <div class="dropdown-menu" aria-labelledby="triggerId">
-        <a class="dropdown-item" href="#">Settings</a>
-        <a class="dropdown-item" href="dashboard.php?logout=true">Logout</a>
+        <a class="dropdown-item" href="edit_account.php?account_id=<?php echo $_SESSION['admin_id']; ?>">Cài đặt</a>
+        <a class="dropdown-item" href="dashboard.php?logout=true">Đăng xuất</a>
       </div>
     </div>
   </div>
