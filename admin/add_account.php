@@ -24,7 +24,7 @@ if (isset($_POST['add_account_btn'])) {
   }
 
   $stmt = $conn->prepare("INSERT INTO accounts (account_name, account_email, account_password, account_role) 
-  VALUES (?, ?, ?, ?)");
+                          VALUES (?, ?, ?, ?)");
   $stmt->bind_param('ssss', $account_name, $account_email, md5($account_password), $account_role);
 
   if ($stmt->execute()) {

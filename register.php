@@ -83,21 +83,28 @@ if (isset($_POST['register'])) {
           <input type="text" class="form-control" id="register-email" name="email" placeholder="Email" required>
         </div>
         <div class="form-group">
-          <label for="register-password">Password</label>
-          <input type="password" class="form-control" id="register-password" name="password" placeholder="Password"
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Password"
             required>
         </div>
         <div class="form-group">
-          <label for="register-confirm-password">Confirm Password</label>
-          <input type="password" class="form-control" id="register-confirm-password" name="confirmPassword"
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
             placeholder="Confirm Password" required>
         </div>
         <div class="form-group">
-          <input type="submit" class="btn" id="register-btn" name="register" value="Register">
-        </div>
-        <div class="form-group">
-          <a id="login-url" class="btn" href="login.php">Have an account? Login</a>
-        </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="checkboxPassword">
+            <label class="form-check-label" for="checkboxPassword">
+              Hiện mật khẩu
+            </label>
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn" id="register-btn" name="register" value="Register">
+          </div>
+          <div class="form-group">
+            <a id="login-url" class="btn" href="login.php">Have an account? Login</a>
+          </div>
       </form>
     </div>
   </section>
@@ -107,6 +114,8 @@ if (isset($_POST['register'])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
+
+  <script src="./main.js"></script>
 </body>
 
 </html>

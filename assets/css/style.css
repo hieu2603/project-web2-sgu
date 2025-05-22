@@ -379,11 +379,6 @@ button:hover {
   border-top: 3px solid #FB774B;
 }
 
-th:last-child,
-td:last-child {
-  text-align: right;
-}
-
 .checkout-container {
   display: flex;
   justify-content: flex-end;
@@ -397,16 +392,27 @@ td:last-child {
 /* Login & Register */
 #login-form,
 #register-form {
-  width: 50%;
+  width: 40%;
   margin: 5px auto;
-  text-align: center;
   padding: 20px;
 }
 
-#login-form input,
-#register-form input {
+#login-form input[type="text"],
+#login-form input[type="password"],
+#register-form input[type="text"],
+#register-form input[type="password"] {
   width: 50%;
   margin: 5px auto;
+}
+
+#login-form .form-check {
+  width: 50%;
+  margin: 5px auto;
+  text-align: left;
+}
+
+#login-form input[type="checkbox"] {
+  margin-right: 8px;
 }
 
 #login-form #login-btn,
@@ -444,7 +450,8 @@ td:last-child {
 }
 
 /* Orders */
-.orders table {
+.orders table,
+.addresses table {
   width: 100%;
   border-collapse: collapse;
 }
@@ -455,19 +462,16 @@ td:last-child {
   align-items: center;
 }
 
-.orders th {
+.orders th,
+.addresses th {
   font-size: 1.2rem;
-  text-align: left;
   padding: 5px 10px;
   color: #FFF;
   background-color: #FB774B;
 }
 
-.orders th:last-child {
-  text-align: right;
-}
-
-.orders td {
+.orders td,
+.addresses td {
   padding: 5px 10px;
 }
 

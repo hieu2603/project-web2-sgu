@@ -123,7 +123,7 @@ if (isset($_SESSION['logged_in'])) {
       <hr class="mx-auto">
     </div>
 
-    <table class="mt-5 pt-5">
+    <table class="mt-5 pt-5 text-center">
       <tr>
         <th>ID</th>
         <th>Tổng tiền</th>
