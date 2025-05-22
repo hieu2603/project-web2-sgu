@@ -9,12 +9,17 @@ if (!isset($_SESSION['logged_in'])) {
   exit;
 }
 
+$account_id = $_GET['account_id'];
+
 if (!isset($_GET['account_id']) || !is_numeric($_GET['account_id'])) {
   header('location: account.php');
   exit;
 }
 
-$account_id = $_GET['account_id'];
+if ($account_id != $_SESSION['user_id']) {
+  header('location: account.php');
+  exit;
+}
 
 $stmt = $conn->prepare("SELECT * FROM shipping_addresses WHERE account_id = ?");
 $stmt->bind_param('i', $account_id);
@@ -56,7 +61,7 @@ if (isset($_POST['delete_address_btn']) && isset($_POST['shipping_address_id']))
 
   <!-- Account Addresses -->
   <section id="addresses" class="addresses container my-5 py-5">
-    <div class="container text-center mt-3 pt-5">
+    <div class="container text-center mt-3">
       <h2 class="form-weight-bold">Danh sách thông tin</h2>
       <hr class="mx-auto">
     </div>
@@ -88,7 +93,7 @@ if (isset($_POST['delete_address_btn']) && isset($_POST['shipping_address_id']))
           </td>
 
           <td>
-            <a href="edit_address.php?account_id=<?php echo $account_id; ?>" class="btn btn-warning">Sửa</a>
+            <a href="edit_address.php?shipping_address_id=<?php echo $row['shipping_address_id']; ?>" class="btn btn-warning">Sửa</a>
           </td>
 
           <td>

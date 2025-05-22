@@ -9,10 +9,16 @@ if (!isset($_SESSION['logged_in'])) {
   exit;
 }
 
-$account_id = $_GET['account_id'];
+$shipping_address_id = (int)$_GET['shipping_address_id'];
+$account_id = $_SESSION['user_id'];
 
-$shipping_address_stmt = $conn->prepare("SELECT * FROM shipping_addresses WHERE account_id = ?");
-$shipping_address_stmt->bind_param('i', $account_id);
+if (!isset($_GET['shipping_address_id']) || !is_numeric($_GET['shipping_address_id'])) {
+  header('location: account.php');
+  exit;
+}
+
+$shipping_address_stmt = $conn->prepare("SELECT * FROM shipping_addresses WHERE shipping_address_id = ?");
+$shipping_address_stmt->bind_param('i', $shipping_address_id);
 $shipping_address_stmt->execute();
 $shipping_address_stmt_result = $shipping_address_stmt->get_result();
 $row = $shipping_address_stmt_result->fetch_assoc();
@@ -26,26 +32,27 @@ if (isset($_POST['edit_address_btn'])) {
   $ward = $_POST['ward'];
   $address = $_POST['address'];
 
-  $stmt = $conn->prepare("INSERT INTO shipping_addresses 
-                          (account_id, receiver_name, phone_number, payment_method, province, district, ward, address)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt = $conn->prepare("UPDATE shipping_addresses 
+                          SET receiver_name = ?, phone_number = ?, payment_method = ?,
+                          province = ?, district = ?, ward = ?, address = ?
+                          WHERE shipping_address_id = ?");
   $stmt->bind_param(
-    'isssssss',
-    $account_id,
+    'sssssssi',
     $name,
     $phone,
     $payment_method,
     $province,
     $district,
     $ward,
-    $address
+    $address,
+    $shipping_address_id
   );
 
   if ($stmt->execute()) {
-    header('location: account_addresses.php?account_id=' . $account_id);
+    header('location: edit_address.php?shipping_address_id=' . $shipping_address_id . '&success=Cập nhật thông tin giao hàng thành công');
     exit;
   } else {
-    header('location: add_address.php?error=Lỗi khi tạo mới thông tin');
+    header('location: edit_address.php?shipping_address_id=' . $shipping_address_id . '&error=Lỗi khi chỉnh sửa thông tin giao hàng');
     exit;
   }
 }
@@ -75,11 +82,12 @@ if (isset($_POST['edit_address_btn'])) {
       <hr class="mx-auto">
     </div>
     <div class="mx-auto container">
-      <form id="checkout-form" action="edit_address.php?account_id=<?php echo $account_id; ?>" method="post">
-        <p class="text-center" style="color: red;">
-          <?php if (isset($_GET['message'])) {
-            echo $_GET['message'];
-          } ?>
+      <form id="checkout-form" action="edit_address.php?shipping_address_id=<?php echo $shipping_address_id; ?>" method="post">
+        <p class="text-success text-center">
+          <?php if (isset($_GET['success'])) echo $_GET['success']; ?>
+        </p>
+        <p class="text-danger text-center">
+          <?php if (isset($_GET['error'])) echo $_GET['error']; ?>
         </p>
         <div class="row mb-3">
           <div class="form-group col-md-4">

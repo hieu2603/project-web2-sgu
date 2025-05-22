@@ -102,7 +102,11 @@ if (isset($_GET['search_btn'])) {
   $adjacents = "2";
   $total_no_of_pages = ceil($total_records / $records_per_page);
 
-  $stmt2 = $conn->prepare("SELECT * FROM products WHERE product_status = 'Đang bán' LIMIT $offset, $records_per_page");
+  $stmt2 = $conn->prepare("SELECT * 
+                           FROM products 
+                           WHERE product_status = 'Đang bán' 
+                           ORDER BY product_id DESC
+                           LIMIT $offset, $records_per_page");
   $stmt2->execute();
   $products = $stmt2->get_result();
 }
