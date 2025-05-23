@@ -1,7 +1,7 @@
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 fixed-top" style="padding-top: 1.5rem !important; padding-bottom: 1.5rem !important;">
     <div class="container">
-      <img src="assets/img/logo.jpg" alt="logo_img">
+      <a class="navbar-brand" href="index.php">HTH</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -10,15 +10,11 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
           <li class="nav-item">
-            <a class="nav-link" href="index.php">Home</a>
+            <a class="nav-link" href="index.php">Trang chủ</a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="shop.php">Shop</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="contact.php">Contact Us</a>
+            <a class="nav-link" href="shop.php">Cửa hàng</a>
           </li>
 
           <li class="nav-item">

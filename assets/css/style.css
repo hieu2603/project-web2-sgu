@@ -35,12 +35,16 @@ h5 {
   font-weight: 400;
 }
 
-h6 {
-  color: #D8D8D8;
+.category_link {
+  color: lightslategray;
+  text-decoration: none;
+}
+
+.category_link:hover {
+  text-decoration: underline;
 }
 
 button {
-  /* font-size: 1rem; */
   font-weight: 900;
   outline: none;
   border: none;
@@ -112,8 +116,26 @@ button:hover {
   background-color: coral;
 }
 
+.button {
+  text-decoration: none;
+  font-weight: 900;
+  outline: none;
+  border: none;
+  background-color: #1D1D1D;
+  color: aliceblue;
+  padding: 13px 30px;
+  text-transform: uppercase;
+  transition: 0.5s ease;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: coral;
+  color: #FFF;
+}
+
 .nav-buttons {
-  margin-left: 65%;
+  margin-left: 70%;
 }
 
 .navbar {
@@ -392,16 +414,15 @@ button:hover {
 /* Login & Register */
 #login-form,
 #register-form {
-  width: 40%;
+  width: 30%;
   margin: 5px auto;
-  padding: 20px;
+  padding: 10px;
 }
 
 #login-form input[type="text"],
 #login-form input[type="password"],
 #register-form input[type="text"],
 #register-form input[type="password"] {
-  width: 50%;
   margin: 5px auto;
 }
 
@@ -429,9 +450,8 @@ button:hover {
 /* Account */
 #account-form {
   width: 50%;
-  margin: 35px auto;
+  margin: 0 auto;
   text-align: center;
-  padding: 20px;
 }
 
 #account-form input {
@@ -447,6 +467,11 @@ button:hover {
 #logout-btn {
   color: #FB774B;
   text-decoration: none;
+}
+
+.account-info #orders-btn:hover,
+#logout-btn:hover {
+  text-decoration: underline;
 }
 
 /* Orders */
@@ -499,8 +524,13 @@ button:hover {
 }
 
 /* Contact */
-#contact span {
+#contact a {
   color: #FB774B;
+  text-decoration: none;
+}
+
+#contact a:hover {
+  text-decoration: underline;
 }
 
 #searchContainer {

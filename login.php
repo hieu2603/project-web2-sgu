@@ -63,7 +63,7 @@ if (isset($_POST['login_btn'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Login</title>
+  <title>Đăng Nhập</title>
 </head>
 
 <body>
@@ -71,24 +71,24 @@ if (isset($_POST['login_btn'])) {
 
   <!-- Login -->
   <section class="my-5 py-5">
-    <div class="container text-center mt-3 pt-5">
-      <h2 class="form-weight-bold">Login</h2>
+    <div class="container text-center mt-3">
+      <h2 class="form-weight-bold">Đăng Nhập</h2>
       <hr class="mx-auto">
     </div>
     <div class="mx-auto container">
       <form id="login-form" method="post" action="login.php">
-        <p style="color: red;"><?php if (isset($_GET["error"])) echo $_GET['error']; ?></p>
+        <p class="text-danger text-center"><?php if (isset($_GET["error"])) echo $_GET['error']; ?></p>
         <div class="form-group">
           <label for="login-email">Email</label>
-          <input type="text" class="form-control" id="login-email" name="email" placeholder="Email" required>
+          <input type="text" class="form-control" id="login-email" name="email" placeholder="nguyenvana@gmail.com" required>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+          <label for="password">Mật khẩu</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="********"
             required>
         </div>
         <div class="form-group">
-          <div class="form-check mt-2">
+          <div class="my-2">
             <input class="form-check-input" type="checkbox" id="checkboxPassword">
             <label class="form-check-label" for="checkboxPassword">
               Hiện mật khẩu
@@ -96,10 +96,10 @@ if (isset($_POST['login_btn'])) {
           </div>
         </div>
         <div class="form-group">
-          <input type="submit" class="btn" id="login-btn" name="login_btn" value="Login">
+          <input type="submit" class="btn w-100" id="login-btn" name="login_btn" value="ĐĂNG NHẬP">
         </div>
-        <div class="form-group">
-          <a id="register-url" class="btn" href="register.php">Don't have an account? Register</a>
+        <div class="form-group text-center mt-2">
+          <a id="register-url" class="btn" href="register.php">Chưa có tài khoản? Đăng ký ngay</a>
         </div>
       </form>
     </div>

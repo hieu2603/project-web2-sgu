@@ -33,10 +33,10 @@ if (isset($_POST['delete_address_btn']) && isset($_POST['shipping_address_id']))
   $delete_address_stmt->bind_param('i', $shipping_address_id);
 
   if ($delete_address_stmt->execute()) {
-    header('location: account_addresses.php?account_id=' . $account_id);
+    header('location: account_addresses.php?account_id=' . $account_id . '&success=Xóa thông tin giao hàng thành công');
     exit;
   } else {
-    header('location: account_addresses.php?error=Lỗi khi xóa thông tin');
+    header('location: account_addresses.php?account_id=' . $account_id . 'error=Lỗi khi xóa thông tin');
     exit;
   }
 }
@@ -53,7 +53,7 @@ if (isset($_POST['delete_address_btn']) && isset($_POST['shipping_address_id']))
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Account</title>
+  <title>Danh sách thông tin giao hàng</title>
 </head>
 
 <body>
@@ -62,11 +62,17 @@ if (isset($_POST['delete_address_btn']) && isset($_POST['shipping_address_id']))
   <!-- Account Addresses -->
   <section id="addresses" class="addresses container my-5 py-5">
     <div class="container text-center mt-3">
-      <h2 class="form-weight-bold">Danh sách thông tin</h2>
+      <h2 class="form-weight-bold">Danh sách thông tin giao hàng</h2>
       <hr class="mx-auto">
     </div>
-    <a href="add_address.php" class="btn btn-primary mt-2">Tạo mới</a>
-    <table class="mt-2 pt-5 text-center">
+    <p class="text-success text-center">
+      <?php if (isset($_GET['success'])) echo $_GET['success']; ?>
+    </p>
+    <p class="text-danger text-center">
+      <?php if (isset($_GET['error'])) echo $_GET['error']; ?>
+    </p>
+    <a href="add_address.php" class="btn btn-primary">Tạo mới</a>
+    <table class="mt-2 text-center">
       <tr>
         <th class="text-start">Thông tin giao hàng</th>
         <th>Chọn</th>

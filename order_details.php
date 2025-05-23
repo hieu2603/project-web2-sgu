@@ -34,12 +34,13 @@ if (!isset($_GET['order_id'])) {
 
 $order_id = $_GET['order_id'];
 
-$order_stmt = $conn->prepare("SELECT order_status, payment_method 
+$order_stmt = $conn->prepare("SELECT orders.*, accounts.account_name 
                               FROM orders
-                              WHERE order_id = ? 
-                              AND account_id = ?");
+                              INNER JOIN accounts
+                              ON orders.account_id=accounts.account_id 
+                              WHERE order_id = ?");
 
-$order_stmt->bind_param('ii', $order_id, $account_id);
+$order_stmt->bind_param('i', $order_id);
 $order_stmt->execute();
 $order_result = $order_stmt->get_result();
 
@@ -48,9 +49,9 @@ if ($order_result->num_rows == 0) {
   exit;
 }
 
-$order_data = $order_result->fetch_assoc();
-$order_status = $order_data['order_status'];
-$payment_method = $order_data['payment_method'];
+$order_row = $order_result->fetch_assoc();
+$order_status = $order_row['order_status'];
+$payment_method = $order_row['payment_method'];
 
 $stmt = $conn->prepare("SELECT products.product_name, products.product_image, 
                         products.product_price, order_items.product_quantity 
@@ -89,7 +90,7 @@ function calculateTotalOrderPrice($order_details)
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Order Details</title>
+  <title>Chi tiết đơn hàng</title>
 </head>
 
 <body>
@@ -97,16 +98,40 @@ function calculateTotalOrderPrice($order_details)
 
   <!-- Order Details -->
   <section id="orders" class="orders order_items container my-5 py-5">
-    <div class="container">
-      <h2 class="font-weight-bolde text-center">Order Details</h2>
+    <div class="container mt-3">
+      <h2 class="font-weight-bolde text-center">Chi tiết đơn hàng</h2>
       <hr class="mx-auto">
     </div>
 
-    <table class="mt-5 pt-5">
+    <div class="row">
+      <div class="col-md-4">
+        <p><strong>Mã đơn hàng:</strong> <?php echo $order_row['order_id']; ?></p>
+        <p><strong>Tài khoản đặt hàng:</strong> <?php echo $order_row['account_name']; ?></p>
+        <p><strong>Tỉnh/thành phố:</strong> <?php echo $order_row['province']; ?></p>
+        <p><strong>Địa chỉ:</strong> <?php echo $order_row['address']; ?></p>
+      </div>
+      <div class="col-md-4">
+        <p><strong>Tổng tiển:</strong> <?php echo number_format($order_row['order_cost'], 0, ',', '.'); ?>đ</p>
+        <p><strong>Người nhận:</strong> <?php echo $order_row['receiver_name']; ?></p>
+        <p><strong>Quận/huyện:</strong> <?php echo $order_row['district']; ?></p>
+        <p><strong>Ngày đặt hàng:</strong> <?php echo $order_row['order_date']; ?></p>
+      </div>
+      <div class="col-md-4">
+        <p class="<?php include '../admin/utils/order_status_color.php'; ?>">
+          <strong style="color: black;">Trạng thái đơn hàng:</strong>
+          <?php echo $order_row['order_status']; ?>
+        </p>
+        <p><strong>Số điện thoại:</strong> <?php echo $order_row['phone_number']; ?></p>
+        <p><strong>Phường/xã:</strong> <?php echo $order_row['ward']; ?></p>
+        <p><strong>Hình thức thanh toán:</strong> <?php echo $order_row['payment_method']; ?></p>
+      </div>
+    </div>
+
+    <table class="text-center mt-3">
       <tr>
-        <th>Product Name</th>
-        <th>Price</th>
-        <th>Quantity</th>
+        <th class="text-start">Tên sản phẩm</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
       </tr>
       <?php foreach ($order_details as $row) { ?>
         <tr>
@@ -120,7 +145,7 @@ function calculateTotalOrderPrice($order_details)
           </td>
 
           <td>
-            <span>$<?php echo $row['product_price']; ?></span>
+            <span><?php echo number_format($row['product_price'], 0, ',', '.'); ?>đ</span>
           </td>
 
           <td>
@@ -131,7 +156,7 @@ function calculateTotalOrderPrice($order_details)
     </table>
 
     <?php if (($order_status != "Thành công") && ($order_status != "Hủy đơn")) { ?>
-      <div class="text-end mt-4">
+      <div class="text-end mt-2">
         <?php if ($payment_method == 'Trực tuyến' && $order_status == 'Chờ thanh toán') { ?>
           <form method="post" action="payment.php" style="display: inline-block;">
             <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">

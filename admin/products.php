@@ -20,7 +20,7 @@ $maxPrice = $_GET['maxPrice'] ?? '';
 $sortedBy = $_GET['sortedBy'] ?? '';
 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$records_per_page = 5;
+$records_per_page = 4;
 $offset = ($page - 1) * $records_per_page;
 
 $base_query_string = "search=" . urlencode($search)
@@ -88,12 +88,12 @@ if (isset($_GET['search_btn'])) {
     substr($baseQuery, strlen("FROM products"));
 
   // Filter condition
-  if ($sortedBy === 'Hàng mới') {
-    $query .= " ORDER BY product_id DESC";
-  } elseif ($sortedBy === 'Giá thấp đến cao') {
+  if ($sortedBy === 'Giá thấp đến cao') {
     $query .= " ORDER BY product_price ASC";
   } elseif ($sortedBy === 'Giá cao đến thấp') {
     $query .= " ORDER BY product_price DESC";
+  } else {
+    $query .= " ORDER BY product_id DESC";
   }
 
   $query .= " LIMIT ?, ?";

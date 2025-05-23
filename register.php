@@ -59,7 +59,7 @@ if (isset($_POST['register'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Register</title>
+  <title>Đăng Ký</title>
 </head>
 
 <body>
@@ -67,43 +67,43 @@ if (isset($_POST['register'])) {
 
   <!-- Register -->
   <section class="my-5 py-5">
-    <div class="container text-center mt-3 pt-5">
-      <h2 class="form-weight-bold">Register</h2>
+    <div class="container text-center mt-3">
+      <h2 class="form-weight-bold">Đăng Ký</h2>
       <hr class="mx-auto">
     </div>
     <div class="mx-auto container">
       <form id="register-form" action="register.php" method="post">
-        <p style="color: red;"><?php if (isset($_GET["error"])) echo $_GET['error']; ?></p>
+        <p class="text-danger text-center"><?php if (isset($_GET["error"])) echo $_GET['error']; ?></p>
         <div class="form-group">
-          <label for="register-name">Name</label>
-          <input type="text" class="form-control" id="register-name" name="name" placeholder="Name" required>
+          <label for="register-name">Tên tài khoản</label>
+          <input type="text" class="form-control" id="register-name" name="name" placeholder="Nguyễn Văn A" required>
         </div>
         <div class="form-group">
           <label for="register-email">Email</label>
-          <input type="text" class="form-control" id="register-email" name="email" placeholder="Email" required>
+          <input type="text" class="form-control" id="register-email" name="email" placeholder="nguyenvana@gmail.com" required>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+          <label for="password">Mật khẩu</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="********"
             required>
         </div>
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
+          <label for="confirmPassword">Xác nhận mật khẩu</label>
           <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-            placeholder="Confirm Password" required>
+            placeholder="********" required>
         </div>
         <div class="form-group">
-          <div class="form-check mt-2">
+          <div class="form-check my-2">
             <input class="form-check-input" type="checkbox" id="checkboxPassword">
             <label class="form-check-label" for="checkboxPassword">
               Hiện mật khẩu
             </label>
           </div>
           <div class="form-group">
-            <input type="submit" class="btn" id="register-btn" name="register" value="Register">
+            <input type="submit" class="btn w-100" id="register-btn" name="register" value="ĐĂNG KÝ">
           </div>
-          <div class="form-group">
-            <a id="login-url" class="btn" href="login.php">Have an account? Login</a>
+          <div class="form-group text-center mt-2">
+            <a id="login-url" class="btn" href="login.php">Đã có tài khoản? Đăng nhập ngay</a>
           </div>
       </form>
     </div>

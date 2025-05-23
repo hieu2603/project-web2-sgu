@@ -69,7 +69,7 @@ if (isset($_POST['edit_address_btn'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Edit Address</title>
+  <title>Chỉnh sửa thông tin giao hàng</title>
 </head>
 
 <body>
@@ -77,7 +77,7 @@ if (isset($_POST['edit_address_btn'])) {
 
   <!-- Checkout -->
   <section class="my-5 py-5">
-    <div class="container text-center mt-3 pt-5">
+    <div class="container text-center mt-3">
       <h2 class="form-weight-bold">Chỉnh sửa thông tin giao hàng</h2>
       <hr class="mx-auto">
     </div>

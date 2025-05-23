@@ -8,7 +8,7 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Contact</title>
+  <title>Liên hệ</title>
 </head>
 
 <body>
@@ -16,15 +16,20 @@
 
   <!-- Contact -->
   <section id="contact" class="container my-5 py-5">
-    <div class="container text-center mt-5">
-      <h3>Contact Us</h3>
+    <div class="container text-center mt-3">
+      <h3>Liên hệ với chúng tôi</h3>
       <hr class="mx-auto">
-      <p class="w-50 mx-auto">
-        Phone number: <span>0777011640</span>
-      </p>
-      <p class="w-50 mx-auto">
-        Email: <span>nguyenvanhieu2603@gmail.com</span>
-      </p>
+      <a href="https://github.com/hieu2603" class="w-50 mx-auto">
+        Nguyễn Văn Hiếu - 3122410117
+      </a>
+      <br>
+      <a href="https://github.com/Hai1205" class="w-50 mx-auto">
+        Nguyễn Hoàng Hải - 3122410095
+      </a>
+      <br>
+      <a href="https://github.com/KimSongJong" class="w-50 mx-auto">
+        Đoàn Tuấn Tài - 3122410365
+      </a>
     </div>
   </section>
 

@@ -36,7 +36,7 @@ if (isset($_POST['add_address_btn'])) {
   );
 
   if ($stmt->execute()) {
-    header('location: account_addresses.php?account_id=' . $account_id);
+    header('location: account_addresses.php?account_id=' . $account_id . '&success=Tạo mới thông tin giao hàng thành công');
     exit;
   } else {
     header('location: add_address.php?error=Lỗi khi tạo mới thông tin');
@@ -56,7 +56,7 @@ if (isset($_POST['add_address_btn'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Add Address</title>
+  <title>Tạo mới thông tin giao hàng</title>
 </head>
 
 <body>
@@ -64,15 +64,15 @@ if (isset($_POST['add_address_btn'])) {
 
   <!-- Checkout -->
   <section class="my-5 py-5">
-    <div class="container text-center mt-3 pt-5">
-      <h2 class="form-weight-bold">Tạo mới thông tin</h2>
+    <div class="container text-center mt-3">
+      <h2 class="form-weight-bold">Tạo mới thông tin giao hàng</h2>
       <hr class="mx-auto">
     </div>
     <div class="mx-auto container">
       <form id="checkout-form" action="add_address.php" method="post">
-        <p class="text-center" style="color: red;">
-          <?php if (isset($_GET['message'])) {
-            echo $_GET['message'];
+        <p class="text-danger text-center">
+          <?php if (isset($_GET['error'])) {
+            echo $_GET['error'];
           } ?>
         </p>
         <div class="row mb-3">

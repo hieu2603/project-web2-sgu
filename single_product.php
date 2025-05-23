@@ -2,10 +2,14 @@
 
 include 'server/connection.php';
 
-if (isset($_GET['product_id'])) {
-  $product_id = $_GET['product_id'];
+$product_id = (int)$_GET['product_id'];
 
-  $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = ?");
+if (isset($_GET['product_id'])) {
+  $stmt = $conn->prepare("SELECT products.*, categories.* 
+                          FROM products
+                          JOIN categories
+                          ON products.category_id=categories.category_id
+                          WHERE product_id = ?");
   $stmt->bind_param("i", $product_id);
 
   $stmt->execute();
@@ -14,6 +18,15 @@ if (isset($_GET['product_id'])) {
 } else {
   header("location: index.php");
 }
+
+$related_products_stmt = $conn->prepare("SELECT *
+                                         FROM products
+                                         WHERE product_id != ?
+                                         ORDER BY RAND()
+                                         LIMIT 4");
+$related_products_stmt->bind_param('i', $product_id);
+$related_products_stmt->execute();
+$related_products_result = $related_products_stmt->get_result();
 
 ?>
 
@@ -54,7 +67,7 @@ if (isset($_GET['product_id'])) {
 
   <!-- Single product -->
   <section class="container single-product my-5 pt-5">
-    <div class="row mt-5">
+    <div class="row mt-3">
       <?php while ($row = $product->fetch_assoc()) { ?>
         <div class="col-lg-5 col-md-6 col-sm-12">
           <img src="<?php echo $row['product_image']; ?>" alt="product_1_img" class="img-fluid w-100 pb-1" id="mainImg">
@@ -75,19 +88,19 @@ if (isset($_GET['product_id'])) {
         </div>
 
 
-        <div class="col-lg-6 col-md-12 col-sm-12">
-          <h6>Men/Shoes</h6>
-          <h3 class="py-4"><?php echo $row['product_name']; ?></h3>
-          <h2><?php echo $row['product_price']; ?></h2>
+        <div class="mx-2 col-lg-6 col-md-12 col-sm-12">
+          <a href="shop.php?search=&search_btn=Tìm+kiếm&category=<?php echo $row['category_id']; ?>&minPrice=&maxPrice=&sortedBy=Hàng+mới" class="category_link"><?php echo $row['category_name']; ?></a>
+          <h3 class="py-1"><?php echo $row['product_name']; ?></h3>
+          <h2 class="mb-3"><?php echo number_format($row['product_price'], 0, ',', '.'); ?>đ</h2>
           <form action="cart.php" method="post">
             <input type="hidden" name="product_id" value="<?php echo $row['product_id']; ?>">
             <input type="hidden" name="product_image" value="<?php echo $row['product_image']; ?>">
             <input type="hidden" name="product_name" value="<?php echo $row['product_name']; ?>">
             <input type="hidden" name="product_price" value="<?php echo $row['product_price']; ?>">
             <input type="number" name="product_quantity" value="1">
-            <button type="submit" name="add_to_cart" class="buy-btn">Add To Cart</button>
+            <button type="submit" name="add_to_cart" class="buy-btn">Thêm Vào Giỏ Hàng</button>
           </form>
-          <h4 class="mt-5 mb-5">Product details</h4>
+          <h4 class="mt-4 mb-2">Mô tả sản phẩm</h4>
           <span><?php echo $row['product_description']; ?></span>
         </div>
       <?php } ?>
@@ -95,64 +108,27 @@ if (isset($_GET['product_id'])) {
   </section>
 
   <!-- Related products -->
-  <section id="related-products" class="my-5 pb-5">
+  <section id="related-products" class="my-5 pb-3">
     <div class="container text-center mt-5 py-5">
-      <h3>Related Products</h3>
+      <h3>Các Sản Phẩm Khác</h3>
       <hr class="mx-auto">
     </div>
     <div class="row mx-auto container-fluid">
-      <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-        <img src="/assets/img/featured_1.jpg" alt="featured_1_img" class="img-fluid mb-3">
-        <div class="star">
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
+      <?php while ($related_products_row = $related_products_result->fetch_assoc()) { ?>
+        <div class="product text-center col-lg-3 col-md-4 col-sm-12">
+          <img src="<?php echo $related_products_row['product_image']; ?>" alt="<?php echo $related_products_row['product_image']; ?>" class="img-fluid mb-3">
+          <div class="star">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <h5 class="p-name"><?php echo $related_products_row['product_name']; ?></h5>
+          <h4 class="p-price"><?php echo number_format($related_products_row['product_price'], 0, ',', '.'); ?>đ</h4>
+          <button class="buy-btn">Mua Ngay</button>
         </div>
-        <h5 class="p-name">Sport Shoes</h5>
-        <h4 class="p-price">$69.9</h4>
-        <button class="buy-btn">Buy Now</button>
-      </div>
-      <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-        <img src="/assets/img/featured_2.jpg" alt="featured_2_img" class="img-fluid mb-3">
-        <div class="star">
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-        </div>
-        <h5 class="p-name">Sport Shoes</h5>
-        <h4 class="p-price">$69.9</h4>
-        <button class="buy-btn">Buy Now</button>
-      </div>
-      <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-        <img src="/assets/img/featured_3.jpg" alt="featured_3_img" class="img-fluid mb-3">
-        <div class="star">
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-        </div>
-        <h5 class="p-name">Sport Shoes</h5>
-        <h4 class="p-price">$69.9</h4>
-        <button class="buy-btn">Buy Now</button>
-      </div>
-      <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-        <img src="/assets/img/featured_4.jpg" alt="featured_4_img" class="img-fluid mb-3">
-        <div class="star">
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-star"></i>
-        </div>
-        <h5 class="p-name">Sport Shoes</h5>
-        <h4 class="p-price">$69.9</h4>
-        <button class="buy-btn">Buy Now</button>
-      </div>
+      <?php } ?>
     </div>
   </section>
 

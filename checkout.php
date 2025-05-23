@@ -31,7 +31,7 @@ if (isset($_POST['choose_address'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Checkout</title>
+  <title>Thông tin giao hàng</title>
 </head>
 
 <body>
@@ -39,8 +39,8 @@ if (isset($_POST['choose_address'])) {
 
   <!-- Checkout -->
   <section class="my-5 py-5">
-    <div class="container text-center mt-3 pt-5">
-      <h2 class="form-weight-bold">Checkout</h2>
+    <div class="container text-center mt-3">
+      <h2 class="form-weight-bold">Thông tin giao hàng</h2>
       <hr class="mx-auto">
     </div>
     <div class="mx-auto container">

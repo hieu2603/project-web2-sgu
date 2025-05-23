@@ -70,46 +70,45 @@ if (isset($_SESSION['logged_in'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Account</title>
+  <title>Tài khoản</title>
 </head>
 
 <body>
   <?php include 'layouts/header.php'; ?>
 
   <!-- Account -->
-  <section class="my-5 py-5">
+  <section class="mt-5 pt-5">
     <div class="row container mx-auto">
-      <div class="text-center mt-3 pt-5 col-lg-6 col-md-12 col-sm-12">
+      <div class="mt-3 text-center col-lg-6 col-md-12 col-sm-12">
         <p class="text-center" style="color: green;"><?php if (isset($_GET["register_success"])) echo $_GET['register_success']; ?></p>
         <p class="text-center" style="color: green;"><?php if (isset($_GET["login_success"])) echo $_GET['login_success']; ?></p>
-        <h3 class="font-weight-bold">Account Info</h3>
+        <h3 class="font-weight-bold">Thông tin tài khoản</h3>
         <hr class="mx-auto">
         <div class="account-info">
-          <p>Name <span><?php if (isset($_SESSION['user_name'])) echo $_SESSION['user_name']; ?></span></p>
-          <p>Email <span><?php if (isset($_SESSION['user_email'])) echo $_SESSION['user_email']; ?></span></p>
-          <p><a href="#orders" id="orders-btn">Your orders</a></p>
-          <p><a href="account.php?logout=true" id="logout-btn">Logout</a></p>
+          <p>Tên tài khoản: <span><?php if (isset($_SESSION['user_name'])) echo $_SESSION['user_name']; ?></span></p>
+          <p>Email: <span><?php if (isset($_SESSION['user_email'])) echo $_SESSION['user_email']; ?></span></p>
+          <p><a href="account.php?logout=true" id="logout-btn">Đăng xuất</a></p>
         </div>
       </div>
 
-      <div class="col-lg-6 col-md-12 col-sm-12">
+      <div class="mt-3 col-lg-6 col-md-12 col-sm-12">
         <form id="account-form" method="post" action="account.php">
           <p class="text-center" style="color: red;"><?php if (isset($_GET["error"])) echo $_GET['error']; ?></p>
           <p class="text-center" style="color: green;"><?php if (isset($_GET["message"])) echo $_GET['message']; ?></p>
-          <h3>Change Password</h3>
+          <h3>Đổi mật khẩu</h3>
           <hr class="mx-auto">
           <div class="form-group">
-            <label for="account-password">Password</label>
-            <input type="password" class="form-control" id="account-password" name="password" placeholder="Password"
+            <label for="account-password">Mật khẩu</label>
+            <input type="password" class="form-control" id="account-password" name="password" placeholder="********"
               required>
           </div>
           <div class="form-group">
-            <label for="account-confirm-password">Confirm Password</label>
+            <label for="account-confirm-password">Xác nhận mật khẩu</label>
             <input type="password" class="form-control" id="account-confirm-password" name="confirmPassword"
-              placeholder="Confirm Password" required>
+              placeholder="********" required>
           </div>
           <div class="form-group">
-            <input type="submit" value="Change Password" name="change_password_btn" class="btn" id="change-password-btn">
+            <input type="submit" value="Đổi mật khẩu" name="change_password_btn" class="btn" id="change-password-btn">
           </div>
         </form>
       </div>
@@ -117,13 +116,13 @@ if (isset($_SESSION['logged_in'])) {
   </section>
 
   <!-- Orders -->
-  <section id="orders" class="orders container my-5 py-3">
+  <section id="orders" class="orders container mt-3">
     <div class="container">
-      <h2 class="font-weight-bolde text-center">Your Orders</h2>
+      <h2 class="font-weight-bolde text-center">Đơn hàng của bạn</h2>
       <hr class="mx-auto">
     </div>
 
-    <table class="mt-5 pt-5 text-center">
+    <table class="mt-3 text-center">
       <tr>
         <th>ID</th>
         <th>Tổng tiền</th>

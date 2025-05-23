@@ -12,7 +12,7 @@ $maxPrice = $_GET['maxPrice'] ?? '';
 $sortedBy = $_GET['sortedBy'] ?? '';
 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$records_per_page = 8;
+$records_per_page = 4;
 $offset = ($page - 1) * $records_per_page;
 
 $base_query_string = "search=" . urlencode($search)
@@ -75,6 +75,8 @@ if (isset($_GET['search_btn'])) {
     $query .= " ORDER BY product_price ASC";
   } elseif ($sortedBy === 'Giá cao đến thấp') {
     $query .= " ORDER BY product_price DESC";
+  } else {
+    $query .= " ORDER BY product_id DESC";
   }
 
   $query .= " LIMIT ?, ?";
@@ -142,7 +144,7 @@ if (isset($_GET['search_btn'])) {
     }
   </style>
 
-  <title>Shop</title>
+  <title>Cửa hàng</title>
 </head>
 
 <body>
@@ -150,10 +152,9 @@ if (isset($_GET['search_btn'])) {
 
   <!-- Shop -->
   <section id="shop" class="my-5 py-5">
-    <div class="container mt-5 py-5">
-      <h3>Our Products</h3>
-      <hr>
-      <p>Here you can check out our featured products</p>
+    <div class="container mt-3">
+      <h3 class="text-center">Sản phẩm của chúng tôi</h3>
+      <hr class="mx-auto">
       <form id="searchForm" action="shop.php" method="get">
         <div class="mb-3" id="searchContainer">
           <input type="text" id="searchInput" name="search" class="form-control flex-7" placeholder="Nhập thông tin tìm kiếm..." value="<?php if (isset($_GET['search_btn'])) echo $_GET['search'] ?>">
@@ -163,7 +164,7 @@ if (isset($_GET['search_btn'])) {
         </div>
 
         <div id="filterContainer">
-          <label for="selectCategory" class="form-label">Category</label>
+          <label for="selectCategory" class="form-label">Phân loại</label>
           <select name="category" id="selectCategory" class="form-select">
             <option value="Tất cả" <?php if (isset($_GET['category']) && $_GET['category'] == 'Tất cả') echo 'selected'; ?>>Tất cả</option>
             <?php while ($category_row = $categories->fetch_assoc()) { ?>
@@ -173,12 +174,12 @@ if (isset($_GET['search_btn'])) {
             <?php } ?>
           </select>
 
-          <label for="price" class="form-label">Price</label>
-          <input style="margin: 0;" name="minPrice" class="form-control" type="number" min="0" max="10000000" placeholder="From" value="<?php if (isset($_GET['minPrice'])) echo $_GET['minPrice']; ?>">
+          <label for="price" class="form-label">Giá</label>
+          <input style="margin: 0;" name="minPrice" class="form-control" type="number" min="0" max="10000000" placeholder="Từ" value="<?php if (isset($_GET['minPrice'])) echo $_GET['minPrice']; ?>">
           <span style="margin: 0 10px;">-</span>
-          <input name="maxPrice" class="form-control" type="number" min="0" max="10000000" placeholder="To" value="<?php if (isset($_GET['maxPrice'])) echo $_GET['maxPrice']; ?>">
+          <input name="maxPrice" class="form-control" type="number" min="0" max="10000000" placeholder="Đến" value="<?php if (isset($_GET['maxPrice'])) echo $_GET['maxPrice']; ?>">
 
-          <label for="sortedBy" class="form-label">Sorted By</label>
+          <label for="sortedBy" class="form-label">Lọc theo</label>
           <select style="width: 200px;" name="sortedBy" id="sortedBy" class="form-select">
             <option value="Hàng mới" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Hàng mới') echo 'selected'; ?>>Hàng mới</option>
             <option value="Giá thấp đến cao" <?php if (isset($_GET['sortedBy']) && $_GET['sortedBy'] == 'Giá thấp đến cao') echo 'selected'; ?>>Giá thấp đến cao</option>
@@ -188,7 +189,7 @@ if (isset($_GET['search_btn'])) {
       </form>
     </div>
     <?php if ($total_no_of_pages > 0) { ?>
-      <div class="row mx-auto container">
+      <div class="row mx-auto container mt-3">
         <?php while ($row = $products->fetch_assoc()) { ?>
           <div onclick="window.location.href='single_product.php?product_id=<?php echo $row['product_id']; ?>'" class="product text-center col-lg-3 col-md-4 col-sm-12">
             <img src="<?php echo $row['product_image']; ?>" alt="<?php echo $row['product_image']; ?>" class="img-fluid mb-3">
@@ -201,7 +202,7 @@ if (isset($_GET['search_btn'])) {
             </div>
             <h5 class="p-name"><?php echo $row['product_name']; ?></h5>
             <h4 class="p-price">$<?php echo $row['product_price']; ?></h4>
-            <a class="btn shop-buy-btn" href="<?php echo "single_product.php?product_id=" . $row['product_id']; ?>">Buy Now</a>
+            <a class="btn shop-buy-btn" href="<?php echo "single_product.php?product_id=" . $row['product_id']; ?>">Mua Ngay</a>
           </div>
         <?php } ?>
 
@@ -214,8 +215,7 @@ if (isset($_GET['search_btn'])) {
                                             echo "#";
                                           } else {
                                             echo "?" . $base_query_string . "&page=" . ($page - 1);
-                                          } ?>">
-                << /a>
+                                          } ?>"><</a>
             </li>
 
             <?php if ($total_no_of_pages >= 3) { ?>

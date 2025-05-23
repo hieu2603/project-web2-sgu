@@ -104,7 +104,7 @@ function calculateTotalCart()
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Cart</title>
+  <title>Giỏ hàng</title>
 </head>
 
 <body>
@@ -112,65 +112,68 @@ function calculateTotalCart()
 
   <!-- Cart -->
   <section class="cart container my-5 py-5">
-    <div class="container mt-5">
-      <h2 class="font-weight-bolde">Your Cart</h2>
-      <hr>
+    <div class="container mt-3 text-center mx-auto">
+      <h2 class="font-weight-bold">Giỏ hàng</h2>
+      <hr class="mx-auto">
     </div>
 
-    <table class="mt-5 pt-5">
-      <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Subtotal</th>
-      </tr>
-
-      <?php foreach ($_SESSION['cart'] as $key => $value) { ?>
+    <?php if ($_SESSION['total'] > 0) { ?>
+      <table class="mt-3 pt-5">
         <tr>
-          <td>
-            <div class="product-info">
-              <img src="<?php echo $value['product_image'] ?>" alt="featured_1_img">
-              <div>
-                <p><?php echo $value['product_name'] ?></p>
-                <small><span>$</span><?php echo $value['product_price'] ?></small>
-                <br>
-                <form action="cart.php" method="post">
-                  <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>">
-                  <input type="submit" name="remove_product" class="remove-btn" value="Remove">
-                </form>
+          <th>Sản phẩm</th>
+          <th>Số lượng</th>
+          <th class="text-end">Tổng cộng</th>
+        </tr>
+
+        <?php foreach ($_SESSION['cart'] as $key => $value) { ?>
+          <tr>
+            <td>
+              <div class="product-info">
+                <img src="<?php echo $value['product_image']; ?>" alt="featured_1_img">
+                <div>
+                  <p><?php echo $value['product_name']; ?></p>
+                  <p><?php echo number_format($value['product_price'], 0, ',', '.'); ?>đ</p>
+                  <form action="cart.php" method="post">
+                    <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>">
+                    <input type="submit" name="remove_product" class="remove-btn" value="Xóa">
+                  </form>
+                </div>
               </div>
-            </div>
-          </td>
+            </td>
 
-          <td>
-            <form action="cart.php" method="post">
-              <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>">
-              <input type="number" name="product_quantity" value="<?php echo $value['product_quantity'] ?>" min="1" max="9">
-              <input type="submit" name="edit_quantity" class="edit-btn" value="Edit">
-            </form>
-          </td>
+            <td>
+              <form action="cart.php" method="post">
+                <input type="hidden" name="product_id" value="<?php echo $value['product_id']; ?>">
+                <input type="number" name="product_quantity" value="<?php echo $value['product_quantity'] ?>" min="1" max="9">
+                <input type="submit" name="edit_quantity" class="edit-btn" value="Sửa">
+              </form>
+            </td>
 
-          <td>
-            <span class="product-price">$<?php echo $value['product_quantity'] * $value['product_price']; ?></span>
-          </td>
-        </tr>
-      <?php } ?>
-    </table>
-    </div>
-
-    <div class="cart-total">
-      <table>
-        <tr>
-          <td>Total</td>
-          <td>$<?php echo $_SESSION['total']; ?></td>
-        </tr>
+            <td>
+              <p class="product-price mb-0 text-end"><?php echo number_format($value['product_quantity'] * $value['product_price'], 0, ',', '.'); ?>đ</p>
+            </td>
+          </tr>
+        <?php } ?>
       </table>
-    </div>
+      </div>
 
-    <div class="checkout-container">
-      <form action="checkout.php" method="post">
-        <input type="submit" name="checkout" class="btn checkout-btn" value="Checkout">
-      </form>
-    </div>
+      <div class="cart-total">
+        <table>
+          <tr class="text-end">
+            <td style="font-weight: bold;">Tổng tiền:</td>
+            <td style="font-weight: bold;"><span class="text-success fs-5"><?php echo number_format($_SESSION['total'], 0, ',', '.'); ?>đ</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="checkout-container">
+        <form action="checkout.php" method="post">
+          <input type="submit" name="checkout" class="btn checkout-btn" value="Đặt hàng">
+        </form>
+      </div>
+    <?php } else { ?>
+      <p class="text-center">Giỏ hàng trống!</p>
+    <?php } ?>
   </section>
 
   <?php include 'layouts/footer.php'; ?>
