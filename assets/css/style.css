@@ -463,13 +463,13 @@ button:hover {
   background-color: #FB774B;
 }
 
-.account-info #orders-btn,
+.account-info #account-addresses-btn,
 #logout-btn {
   color: #FB774B;
   text-decoration: none;
 }
 
-.account-info #orders-btn:hover,
+.account-info #account-addresses-btn:hover,
 #logout-btn:hover {
   text-decoration: underline;
 }

@@ -32,16 +32,16 @@ $types1 = "i";
 
 if ($fromDay && $toDay) {
   $sql1 .= " AND order_date BETWEEN ? AND ?";
-  $params1[] = $fromDay;
-  $params1[] = $toDay;
+  $params1[] = $fromDay . ' 00:00:00';
+  $params1[] = $toDay . ' 23:59:59';
   $types1 .= "ss";
 } elseif ($fromDay) {
   $sql1 .= " AND order_date >= ?";
-  $params1[] = $fromDay;
+  $params1[] = $fromDay . ' 00:00:00';
   $types1 .= "s";
 } elseif ($toDay) {
   $sql1 .= " AND order_date <= ?";
-  $params1[] = $toDay;
+  $params1[] = $toDay . ' 23:59:59';
   $types1 .= "s";
 }
 
@@ -61,16 +61,16 @@ $types2 = "i";
 
 if ($fromDay && $toDay) {
   $sql2 .= " AND order_date BETWEEN ? AND ?";
-  $params2[] = $fromDay;
-  $params2[] = $toDay;
+  $params2[] = $fromDay . ' 00:00:00';
+  $params2[] = $toDay . ' 23:59:59';
   $types2 .= "ss";
 } elseif ($fromDay) {
   $sql2 .= " AND order_date >= ?";
-  $params2[] = $fromDay;
+  $params2[] = $fromDay . ' 00:00:00';
   $types2 .= "s";
 } elseif ($toDay) {
   $sql2 .= " AND order_date <= ?";
-  $params2[] = $toDay;
+  $params2[] = $toDay . ' 23:59:59';
   $types2 .= "s";
 }
 
@@ -96,7 +96,7 @@ $orders = $stmt2->get_result();
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../admin/assets/css/style.css">
-  <title>Orders List</title>
+  <title>Danh sách đơn hàng</title>
 </head>
 
 <body>

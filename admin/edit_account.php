@@ -90,7 +90,7 @@ if (isset($_POST['lock_account_btn'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../admin/assets/css/style.css">
-  <title>Edit Account</title>
+  <title>Chỉnh sửa thông tin tài khoản</title>
 </head>
 
 <body>

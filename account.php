@@ -87,6 +87,7 @@ if (isset($_SESSION['logged_in'])) {
         <div class="account-info">
           <p>Tên tài khoản: <span><?php if (isset($_SESSION['user_name'])) echo $_SESSION['user_name']; ?></span></p>
           <p>Email: <span><?php if (isset($_SESSION['user_email'])) echo $_SESSION['user_email']; ?></span></p>
+          <p><a href="account_addresses.php?account_id=<?php echo $_SESSION['user_id']; ?>" id="account-addresses-btn">Thông tin giao hàng</a></p>
           <p><a href="account.php?logout=true" id="logout-btn">Đăng xuất</a></p>
         </div>
       </div>

@@ -93,7 +93,7 @@ $total_spent_result = $total_spent_stmt->get_result();
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../admin/assets/css/style.css">
-  <title>Admin Dashboard</title>
+  <title>Thống kê</title>
 </head>
 
 <body>

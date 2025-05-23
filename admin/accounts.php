@@ -109,7 +109,7 @@ if (isset($_GET['search_btn'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../admin/assets/css/style.css">
-  <title>Accounts Dashboard</title>
+  <title>Quản Lý Tài Khoản</title>
 </head>
 
 <body>

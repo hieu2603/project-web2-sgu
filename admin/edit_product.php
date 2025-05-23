@@ -138,6 +138,21 @@ if (isset($_POST['delete_product_btn'])) {
   }
 }
 
+if (isset($_POST['update_product_status_btn'])) {
+  $update_product_status_stmt = $conn->prepare("UPDATE products
+                                                SET product_status = 'Đang bán'
+                                                WHERE product_id = ?");
+  $update_product_status_stmt->bind_param('i', $product_id);
+
+  if ($update_product_status_stmt->execute()) {
+    header('location: products.php');
+    exit;
+  } else {
+    header('location: edit_product.php?product_id=' . $product_id . '&error=Lỗi khi mở bán sản phẩm');
+    exit;
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -241,7 +256,11 @@ if (isset($_POST['delete_product_btn'])) {
               <div class="row mb-2">
                 <div class="form-group col-md-4 mt-2">
                   <input class="btn btn-primary" type="submit" name="edit_product_btn" value="Lưu">
-                  <input class="btn btn-danger ms-2" type="submit" name="delete_product_btn" value="Xóa">
+                  <?php if ($row['product_status'] != 'Ngừng bán') { ?>
+                    <input class="btn btn-danger ms-2" type="submit" name="delete_product_btn" value="Xóa">
+                  <?php } else { ?>
+                    <input class="btn btn-success ms-2" type="submit" name="update_product_status_btn" value="Mở bán">
+                  <?php } ?>
                 </div>
               </div>
             </div>

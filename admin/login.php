@@ -66,7 +66,7 @@ if (isset($_POST['login_btn'])) {
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/d32f1bec50.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../admin/assets/css/login_style.css">
-  <title>Admin Login</title>
+  <title>Trang Đăng Nhập Admin</title>
 </head>
 
 <body>
