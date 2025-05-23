@@ -72,9 +72,15 @@ if (!isset($_SESSION['logged_in'])) {
     }
 
     // 3. Remove products from cart -> delay until payment is done
-    // unset($_SESSION['cart']);
+    unset($_SESSION['cart']);
+    unset($_SESSION['total']);
 
-    header('location: ../order_success.php?order_id=' . $order_id);
-    exit;
+    if ($payment_method == 'Tiền mặt') {
+      header('location: ../order_success.php?order_id=' . $order_id);
+      exit;
+    } elseif ($payment_method == 'Trực tuyến') {
+      header('location: ../order_details.php?order_id=' . $order_id . '&message=Vui lòng thanh toán đơn hàng');
+      exit;
+    }
   }
 }

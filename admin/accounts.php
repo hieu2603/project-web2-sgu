@@ -124,7 +124,7 @@ if (isset($_GET['search_btn'])) {
         <form id="searchForm" action="accounts.php" method="get">
           <div class="mb-3" id="searchContainer">
             <a class="btn btn-primary" href="add_account.php">Thêm</a>
-            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm..." value="<?php if (isset($_GET['search'])) echo $_GET['search']; ?>">
+            <input type="text" name="search" class="form-control" style="width: 30%;" placeholder="Tìm kiếm... (ID, tên tài khoản, email)" value="<?php if (isset($_GET['search'])) echo $_GET['search']; ?>">
             <input type="submit" value="Tìm kiếm" name="search_btn" class="btn btn-outline-primary">
             <input type="button" value="Lọc" id="filterToggleBtn" name="filter_btn" class="btn btn-outline-success">
             <a href="accounts.php" class="btn btn-secondary">Đặt lại</a>

@@ -117,7 +117,7 @@ function calculateTotalCart()
       <hr class="mx-auto">
     </div>
 
-    <?php if ($_SESSION['total'] > 0) { ?>
+    <?php if (isset($_SESSION['total']) && $_SESSION['total'] > 0) { ?>
       <table class="mt-3 pt-5">
         <tr>
           <th>Sản phẩm</th>

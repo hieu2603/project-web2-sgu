@@ -116,7 +116,7 @@ $related_products_result = $related_products_stmt->get_result();
     <div class="row mx-auto container-fluid">
       <?php while ($related_products_row = $related_products_result->fetch_assoc()) { ?>
         <div class="product text-center col-lg-3 col-md-4 col-sm-12">
-          <img src="<?php echo $related_products_row['product_image']; ?>" alt="<?php echo $related_products_row['product_image']; ?>" class="img-fluid mb-3">
+          <img onclick="window.location.href='single_product.php?product_id=<?php echo $related_products_row['product_id']; ?>'" src="<?php echo $related_products_row['product_image']; ?>" alt="<?php echo $related_products_row['product_image']; ?>" class="img-fluid mb-3">
           <div class="star">
             <i class="fa-solid fa-star"></i>
             <i class="fa-solid fa-star"></i>
@@ -126,7 +126,7 @@ $related_products_result = $related_products_stmt->get_result();
           </div>
           <h5 class="p-name"><?php echo $related_products_row['product_name']; ?></h5>
           <h4 class="p-price"><?php echo number_format($related_products_row['product_price'], 0, ',', '.'); ?>đ</h4>
-          <button class="buy-btn">Mua Ngay</button>
+          <button onclick="window.location.href='single_product.php?product_id=<?php echo $related_products_row['product_id']; ?>'" class="buy-btn">Mua Ngay</button>
         </div>
       <?php } ?>
     </div>

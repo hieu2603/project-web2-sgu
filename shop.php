@@ -12,7 +12,7 @@ $maxPrice = $_GET['maxPrice'] ?? '';
 $sortedBy = $_GET['sortedBy'] ?? '';
 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$records_per_page = 4;
+$records_per_page = 8;
 $offset = ($page - 1) * $records_per_page;
 
 $base_query_string = "search=" . urlencode($search)
@@ -153,7 +153,7 @@ if (isset($_GET['search_btn'])) {
   <!-- Shop -->
   <section id="shop" class="my-5 py-5">
     <div class="container mt-3">
-      <h3 class="text-center">Sản phẩm của chúng tôi</h3>
+      <h3 class="text-center">Sản Phẩm Của Chúng Tôi</h3>
       <hr class="mx-auto">
       <form id="searchForm" action="shop.php" method="get">
         <div class="mb-3" id="searchContainer">
@@ -201,7 +201,7 @@ if (isset($_GET['search_btn'])) {
               <i class="fa-solid fa-star"></i>
             </div>
             <h5 class="p-name"><?php echo $row['product_name']; ?></h5>
-            <h4 class="p-price">$<?php echo $row['product_price']; ?></h4>
+            <h4 class="p-price"><?php echo number_format($row['product_price'], 0, ',', '.'); ?>đ</h4>
             <a class="btn shop-buy-btn" href="<?php echo "single_product.php?product_id=" . $row['product_id']; ?>">Mua Ngay</a>
           </div>
         <?php } ?>

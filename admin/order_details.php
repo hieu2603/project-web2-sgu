@@ -44,8 +44,6 @@ $order_items_stmt->bind_param('i', $order_id);
 $order_items_stmt->execute();
 $order_items = $order_items_stmt->get_result();
 
-$order_items_row = $order_items->fetch_assoc();
-
 if (isset($_POST['confirm_order_btn'])) {
   $confirm_order_stmt = $conn->prepare("UPDATE orders
                                         SET order_status = 'Đã xác nhận'
@@ -161,13 +159,15 @@ if (isset($_POST['cancel_order_btn'])) {
                 </tr>
               </thead>
               <tbody>
-                <tr class="align-middle">
-                  <th><?php echo $order_items_row['item_id']; ?></th>
-                  <td><img src="<?php echo $order_items_row['product_image']; ?>" style="width: 70px; height: 70px;"></td>
-                  <td><?php echo $order_items_row['product_name']; ?></td>
-                  <td><?php echo number_format($order_items_row['product_price'], 0, ',', '.'); ?>đ</td>
-                  <td><?php echo $order_items_row['product_quantity']; ?></td>
-                </tr>
+                <?php while ($order_items_row = $order_items->fetch_assoc()) { ?>
+                  <tr class="align-middle">
+                    <th><?php echo $order_items_row['item_id']; ?></th>
+                    <td><img src="<?php echo $order_items_row['product_image']; ?>" style="width: 70px; height: 70px;"></td>
+                    <td><?php echo $order_items_row['product_name']; ?></td>
+                    <td><?php echo number_format($order_items_row['product_price'], 0, ',', '.'); ?>đ</td>
+                    <td><?php echo $order_items_row['product_quantity']; ?></td>
+                  </tr>
+                <?php } ?>
               </tbody>
             </table>
           </div>

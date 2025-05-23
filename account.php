@@ -138,7 +138,7 @@ if (isset($_SESSION['logged_in'])) {
           </td>
 
           <td>
-            <span>$<?php echo $row['order_cost']; ?></span>
+            <span><?php echo number_format($row['order_cost'], 0, ',', '.'); ?>đ</span>
           </td>
 
           <td>

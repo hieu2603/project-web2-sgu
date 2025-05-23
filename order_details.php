@@ -157,6 +157,7 @@ function calculateTotalOrderPrice($order_details)
 
     <?php if (($order_status != "Thành công") && ($order_status != "Hủy đơn")) { ?>
       <div class="text-end mt-2">
+        <p class="text-danger"><?php if (isset($_GET['message'])) echo 'Vui lòng thanh toán đơn hàng'; ?></p>
         <?php if ($payment_method == 'Trực tuyến' && $order_status == 'Chờ thanh toán') { ?>
           <form method="post" action="payment.php" style="display: inline-block;">
             <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
